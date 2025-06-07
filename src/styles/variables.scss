@@ -1,0 +1,42 @@
+// Colors
+$color-black: #000000;
+$color-white: #ffffff;
+$color-gray-light: rgba(0, 0, 0, 0.1);
+$color-gray-medium: rgba(0, 0, 0, 0.5);
+$color-gray-dark: rgba(0, 0, 0, 0.8);
+
+// Typography
+$font-primary: 'Montserrat',sans-serif;
+$font-display: 'Cinematografica', sans-serif;
+
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;    // 14px
+$font-size-md: 1rem;        // 16px
+$font-size-lg: 1.25rem;     // 20px
+$font-size-xl: 1.5rem;      // 24px
+$font-size-xxl: 2.5rem;     // 40px
+$font-size-xxxl: 4rem;      // 64px
+$font-size-huge: 6rem;      // 96px
+
+// Spacing
+$spacing-xs: 0.25rem;      // 4px
+$spacing-sm: 0.5rem;       // 8px
+$spacing-md: 1rem;         // 16px
+$spacing-lg: 2rem;         // 32px
+$spacing-xl: 4rem;         // 64px
+$spacing-xxl: 8rem;        // 128px
+
+// Layout
+$container-width: 1440px;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-header: 1100;
+$z-index-modal: 1200;
+$z-index-overlay: 1300;

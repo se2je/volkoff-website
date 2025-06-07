@@ -1,0 +1,87 @@
+{
+  "header": {
+    "home": "HOME",
+    "catalog": "CATALOG",
+    "contact": "CONTACT"
+  },
+  "hero": {
+    "title": "VOLKOFF",
+    "subtitle": "BREAKING FASHION RULES SINCE 2025",
+    "cta": "EXPLORE"
+  },
+  "about": {
+    "title": "ABOUT VOLKOFF",
+    "description": "VOLKOFF was born from the rebellion against conventional fashion. We create bold, uncompromising pieces that challenge the status quo. Our designs embrace raw aesthetics and industrial influences, representing the voice of those who refuse to be silenced.",
+    "mission": "Our mission is to redefine fashion as a form of resistance, creating pieces that empower the wearer and provoke thought."
+  },
+  "contact": {
+    "title": "CONTACT",
+    "email": "Email",
+    "instagram": "Instagram",
+    "message": "MESSAGE US",
+    "send": "SEND"
+  },
+  "catalog": {
+    "title": "WORKS CATALOG",
+    "price": "PRICE",
+    "currency": "$",
+    "openSocial": "Instagram"
+  },
+  "footer": {
+    "rights": "© 2025 VOLKOFF. ALL RIGHTS RESERVED.",
+    "privacy": "PRIVACY POLICY",
+    "terms": "TERMS OF USE"
+  },
+  "items": {
+    "item1": {
+      "name": "Afgana jacket ",
+      "descr": "Cordura material, water-repellent fabric, IR (infrared protection) drones will not see you. The jacket is for real veterans of the Afghan kush, the texture of the fabric resembles burnt lungs. Be ready to declare war on your addiction.",
+      "price": "430"
+    },
+    "item2": {
+      "name": "MV Calf Skin Jacket ",
+      "descr": "Material, Genuine calf leather, feel like a real cowboy in the wild west of Moscow\n",
+      "price": "560"
+    },
+    "item3": {
+      "name": "FedEx anorak",
+      "descr": "Material, Cordura, Water-repellent texture, resistant to winds. Anorak for lovers of wall painting and street movement\uD83D\uDE01",
+      "price": "300"
+    },
+    "item4": {
+      "name": "DRT Black jeans ",
+      "descr": "Material, Japanese denim (Kurabo) Classic straight cut. The fabric is faded and dirty, as if you spent a week in the sands of Arizona in these jeans. You'll look like Daniel Craig from the movie Cowboys vs Aliens.",
+      "price": "210"
+    },
+    "item5": {
+      "name": "DRT Oliva jeans ",
+      "descr": "Material, Japanese denim (Kurabo) Classic straight cut with low flaring at the bottom. The fabric lay for 2 days in a swampy area. For lovers of forest treasures",
+      "price": "210"
+    },
+    "item6": {
+      "name": "DRT Blue punk jeans ",
+      "descr": "The material is Japanese denim (kurabo) with a classic straight cut. The legendary pale blue color and the color of mud. Always be a young punk, capable of anything. Fall down and get up, and it doesn't matter what you're wearing.",
+      "price": "210"
+    },
+    "item7": {
+      "name": "SSS25 Black cap ",
+      "descr": "ordinary cap \nmade in the general style of the collection",
+      "price": "50"
+    },
+    "item8": {
+      "name": "SSS25 Brown cap ",
+      "descr": "ordinary cap \nmade in the general style of the collection",
+      "price": "50"
+    },
+    "item9": {
+      "name": "SSS25 Khaki cap ",
+      "descr": "ordinary cap \nmade in the general style of the collection\n",
+      "price": "50"
+    },
+    "item10": {
+      "name": "Sporto duffle bag ",
+      "descr": "A large bag for any purpose, travel, painting, escape, harvesting. Made in the general style of things.",
+      "price": "130"
+    }
+  }
+}

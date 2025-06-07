@@ -1,0 +1,154 @@
+// Typography styles
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: $spacing-md;
+}
+
+h1 {
+  font-size: $font-size-huge;
+  
+  @media (max-width: $breakpoint-lg) {
+    font-size: $font-size-xxxl;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xxl;
+  }
+  
+  @media (max-width: $breakpoint-sm) {
+    font-size: $font-size-xl;
+  }
+}
+
+h2 {
+  font-size: $font-size-xxxl;
+  
+  @media (max-width: $breakpoint-lg) {
+    font-size: $font-size-xxl;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xl;
+  }
+  
+  @media (max-width: $breakpoint-sm) {
+    font-size: $font-size-lg;
+  }
+}
+
+h3 {
+  font-size: $font-size-xxl;
+  
+  @media (max-width: $breakpoint-lg) {
+    font-size: $font-size-xl;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-lg;
+  }
+}
+
+h4 {
+  font-size: $font-size-xl;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-lg;
+  }
+}
+
+h5 {
+  font-size: $font-size-lg;
+}
+
+h6 {
+  font-size: $font-size-md;
+}
+
+p {
+  margin-bottom: $spacing-md;
+  line-height: 1.6;
+}
+
+// Text styles
+.text {
+  &--center {
+    text-align: center;
+  }
+  
+  &--right {
+    text-align: right;
+  }
+  
+  &--uppercase {
+    text-transform: uppercase;
+  }
+  
+  &--bold {
+    font-weight: 700;
+  }
+  
+  &--medium {
+    font-weight: 500;
+  }
+  
+  &--display {
+    font-family: var(--font-display);
+  }
+  
+  &--xl {
+    font-size: $font-size-xl;
+  }
+  
+  &--lg {
+    font-size: $font-size-lg;
+  }
+  
+  &--md {
+    font-size: $font-size-md;
+  }
+  
+  &--sm {
+    font-size: $font-size-sm;
+  }
+  
+  &--xs {
+    font-size: $font-size-xs;
+  }
+}
+
+// Distorted text
+.text-distort {
+  display: inline-block;
+  position: relative;
+  transform: skew(-5deg) rotate(-1deg);
+}
+
+// Broken text
+.text-broken {
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: $color-white;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

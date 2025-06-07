@@ -1,0 +1,120 @@
+.aboutSection {
+  padding: $spacing-xxl 0;
+  position: relative;
+  overflow: hidden;
+  
+  @media (max-width: $breakpoint-lg) {
+    padding: $spacing-xl 0;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-lg 0;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.content {
+  position: relative;
+}
+
+.title {
+    font-family: var(--font-display);
+  font-size: $font-size-xxl;
+  font-weight: 700;
+  margin-bottom: $spacing-xl;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: $color-white;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xl;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.textContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-xl;
+  
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+}
+
+.text {
+  p {
+    margin-bottom: $spacing-md;
+    font-size: $font-size-lg;
+    line-height: 1.6;
+    
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-md;
+    }
+  }
+}
+
+.mission {
+    font-family: var(--font-display);
+  font-size: $font-size-md;
+  font-style: italic;
+  font-weight: 500;
+  position: relative;
+  padding-left: $spacing-md;
+  border-left: 1px solid $color-white;
+}
+
+.imageContainer {
+  position: relative;
+  height: 100%;
+  min-height: 400px;
+  overflow: hidden;
+  
+  @media (max-width: $breakpoint-md) {
+    min-height: 300px;
+  }
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://images.pexels.com/photos/2866119/pexels-photo-2866119.jpeg');
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(100%) contrast(1.2);
+  transition: transform 0.5s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6));
+  }
+}

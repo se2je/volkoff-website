@@ -1,0 +1,186 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-index-header;
+  padding: $spacing-md 0;
+  transition: all 0.3s ease;
+  background-color: transparent;
+  color: $color-black;
+  
+  &.scrolled {
+    background-color: rgba($color-black, 0.9);
+    padding: $spacing-sm 0;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    color: $color-white;
+    
+    .menuToggle svg {
+      color: $color-white;
+    }
+    
+    .nav {
+      @media (max-width: $breakpoint-lg) {
+        background-color: $color-black;
+        color: $color-white;
+        
+        a {
+          color: $color-white;
+        }
+      }
+    }
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: $font-display;
+  font-size: $font-size-xxl;
+  line-height:$font-size-xxl;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  
+  .logoLink {
+    position: relative;
+    display: inline-block;
+    color: inherit;
+    transform: skew(-5deg);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      transform: skew(-5deg) scale(1.05);
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: currentColor;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+}
+
+.menuToggle {
+  display: none;
+  cursor: pointer;
+  
+  @media (max-width: $breakpoint-lg) {
+    display: block;
+  }
+}
+
+.nav {
+  @media (max-width: $breakpoint-lg) {
+    position: fixed;
+    top: 0;
+    right: -150%;
+    width: 100%;
+    height: 100vh;
+    background-color: $color-white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: right 0.3s ease;
+    border-left: 1px solid $color-black;
+    
+    &.active {
+      right: 0;
+    }
+  }
+}
+
+.menuToggle {
+  cursor: pointer;
+  z-index: $z-index-header + 1;
+  
+  svg {
+    color: $color-black;
+  }
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  
+  @media (max-width: $breakpoint-lg) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.navItem {
+  margin: 0 $spacing-md;
+  position: relative;
+  
+  @media (max-width: $breakpoint-lg) {
+    margin: $spacing-md 0;
+  }
+  
+  a {
+    font-family: var(--font-primary);
+    font-size: $font-size-sm;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+    padding: $spacing-xs 0;
+    color: inherit;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 0.7;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: currentColor;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover::after,
+    &.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    
+    &.active {
+      color: $color-white;
+    }
+    
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-lg;
+    }
+  }
+}

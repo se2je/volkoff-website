@@ -1,0 +1,176 @@
+@import "@/styles/variables";
+
+.catalogItem {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+.imageSlider {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+
+  @media (max-width: $breakpoint-md) {
+    height: 400px;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    height: 300px;
+  }
+}
+
+.imagesContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.imageWrapper {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.itemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(30%);
+}
+
+.sliderButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.3s ease;
+  border: 1px solid black;
+  background-color: transparent;
+
+  &:hover {
+
+  }
+
+  svg {
+    color: black;
+  }
+}
+
+.prevButton {
+  left: 10px;
+}
+
+.nextButton {
+  right: 10px;
+}
+
+.pagination {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.paginationDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba($color-black, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &.active {
+    background-color: $color-black;
+  }
+
+  &:hover {
+    background-color: rgba($color-black, 0.8);
+  }
+}
+
+.itemDetails {
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+
+  @media (max-width: 400px) {
+    padding: 1rem;
+  }
+}
+
+.itemName {
+  font-size: $font-size-xxl;
+  font-weight: 500;
+  margin-bottom: $spacing-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: skew(-5deg);
+    font-family: $font-display;
+
+}
+
+.itemDescription {
+  font-size: $font-size-md;
+  line-height: 1.6;
+  margin-bottom: $spacing-lg;
+  opacity: 0.8;
+  text-align: justify;
+}
+
+.itemFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media (max-width: $breakpoint-sm) {
+    gap: $spacing-md;
+  }
+}
+
+.priceContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.price {
+  font-size: $font-size-xl;
+  font-weight: 500;
+}
+
+.socialButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm $spacing-md;
+  background-color: transparent;
+  border: 1px solid $color-black;
+  color: $color-black;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $color-black;
+    color: $color-white;
+  }
+}

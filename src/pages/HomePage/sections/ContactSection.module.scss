@@ -1,0 +1,168 @@
+.contactSection {
+  padding: $spacing-xl 0;
+  position: relative;
+  overflow: hidden;
+  background: $color-white;
+  
+  @media (max-width: $breakpoint-lg) {
+    padding: $spacing-xl 0;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-lg 0;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.content {
+  position: relative;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: $font-size-xxl;
+  font-weight: 700;
+  margin-bottom: $spacing-lg;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  color: $color-black;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: $color-black;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xl;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.contactContent {
+  gap: $spacing-md;
+  
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+}
+
+.contactBlock {
+  padding: $spacing-lg;
+  background: $color-gray-light;
+  border: 1px solid $color-black;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  @media (max-width: 400px) {
+    padding: 2rem 1rem;
+  }
+}
+
+.blockTitle {
+  font-family: $font-display;
+  font-size: $font-size-xl;
+  font-weight: 700;
+  margin-bottom: $spacing-md;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-black;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.catalogPreview {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  
+  p {
+    opacity: 0.7;
+    margin-bottom: $spacing-md;
+  }
+}
+
+.catalogLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  background: $color-white;
+  color: $color-black;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: transparent;
+    color: $color-white;
+    outline: 1px solid $color-white;
+  }
+}
+
+.infoItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: $color-white;
+  border: 1px solid $color-black;
+  
+  svg {
+    stroke: $color-black;
+  }
+}
+
+.infoText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  h3 {
+    font-size: $font-size-md;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
+  p{
+    margin-bottom: 0;
+  }
+  a {
+    font-size: $font-size-md;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

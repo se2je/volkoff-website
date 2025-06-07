@@ -1,0 +1,60 @@
+@import "@/styles/variables";
+@import "@/styles/global";
+
+.catalogPage {
+  padding: $spacing-md 0;
+  margin-top: 80px;
+  
+  @media (max-width: $breakpoint-lg) {
+    padding: $spacing-xl 0;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-lg 0;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: $font-size-xxl;
+  font-weight:500;
+  margin-bottom: $spacing-lg;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+    font-family: $font-display;
+
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: $color-white;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xxl;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}

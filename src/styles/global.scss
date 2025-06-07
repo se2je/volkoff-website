@@ -1,0 +1,181 @@
+@import 'reset';
+@import 'variables';
+@import 'animations';
+@import 'typography';
+@import 'utils';
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-primary;
+  color: $color-black;
+  background-color: $color-white;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+.container {
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+  
+  @media (max-width: $breakpoint-md) {
+    padding: 0 $spacing-sm;
+  }
+}
+
+.section {
+  padding: $spacing-xl 0;
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-lg 0;
+  }
+  
+  &__title {
+    font-family: $font-display;
+    font-size: $font-size-xxl;
+    font-weight: 700;
+    margin-bottom: $spacing-lg;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-xl;
+      margin-bottom: $spacing-md;
+    }
+  }
+}
+
+// Button styles
+.btn {
+  display: inline-block;
+  padding: $spacing-sm $spacing-md;
+  font-family: $font-primary;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid $color-black;
+  background-color: transparent;
+  color: $color-black;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: $color-black;
+    color: $color-white;
+  }
+  
+  &--filled {
+    background-color: $color-black;
+    color: $color-white;
+    
+    &:hover {
+      background-color: $color-gray-dark;
+      border-color: $color-gray-dark;
+      color: $color-black;
+    }
+  }
+}
+
+// Glitch effect
+.glitch {
+  position: relative;
+  
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  &::before {
+    left: 2px;
+    text-shadow: -2px 0 $color-white;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+  }
+  
+  &::after {
+    left: -2px;
+    text-shadow: -2px 0 $color-gray-light;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+  }
+}
+
+// Image treatments
+.image-container {
+  position: relative;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+// Grid layouts
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: $spacing-md;
+  
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(6, 1fr);
+    gap: $spacing-sm;
+  }
+  
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@font-face {
+  font-family: 'Guano';
+  src: url('../fonts/guanoapes.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
