@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.logoSection}>
-            <div className={styles.logo}>VOLKOFF</div>
+            <div className={styles.logo}>Volkoff</div>
           </div>
           
           <div className={styles.linksSection}>

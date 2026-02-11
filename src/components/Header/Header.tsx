@@ -51,7 +51,7 @@ const Header: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.logo}>
           <a onClick={() => scrollToSection('hero')} className={styles.logoLink}>
-            VOLKOFF
+            Volkoff
           </a>
         </div>
         
@@ -61,11 +61,7 @@ const Header: React.FC = () => {
         
         <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}>
           <ul className={styles.navList}>
-            <li className={styles.navItem}>
-              <a onClick={() => scrollToSection('hero')}>
-                {t('header.home')}
-              </a>
-            </li>
+
             <li className={styles.navItem}>
               <a onClick={() => scrollToSection('catalog')}>
                 {t('header.catalog')}

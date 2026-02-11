@@ -22,7 +22,6 @@ const App: React.FC = () => {
       <Header />
       <LanguageSwitcher />
       <main>
-        <HeroSection />
         <CatalogPage />
         <ContactSection />
       </main>

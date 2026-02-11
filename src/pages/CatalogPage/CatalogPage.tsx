@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import styles from './CatalogPage.module.scss';
 
 // Components
@@ -9,8 +8,7 @@ import CatalogItem from './components/CatalogItem';
 import { catalogItems } from './data/catalogItems';
 
 const CatalogPage: React.FC = () => {
-  const { t } = useTranslation();
-  
+
   const pageVariants = {
     initial: {
       opacity: 0
@@ -29,18 +27,8 @@ const CatalogPage: React.FC = () => {
       }
     }
   };
-  
-  const titleVariants = {
-    initial: { y: -20, opacity: 0 },
-    animate: { 
-      y: 0, 
-      opacity: 1,
-      transition: {
-        duration: 0.6
-      }
-    }
-  };
-  
+
+
   return (
     <motion.div 
       id="catalog"
@@ -51,13 +39,7 @@ const CatalogPage: React.FC = () => {
       variants={pageVariants}
     >
       <div className={styles.container}>
-        <motion.h1 
-          className={styles.title}
-          variants={titleVariants}
-        >
-          {t('catalog.title')}
-        </motion.h1>
-        
+
         <div className={styles.grid}>
           {catalogItems.map((item, index) => (
             <CatalogItem key={item.id} item={item} index={index} />

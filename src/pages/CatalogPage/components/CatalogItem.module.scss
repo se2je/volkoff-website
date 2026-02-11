@@ -52,7 +52,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2;
   transition: background-color 0.3s ease;
   border: 1px solid black;
   background-color: transparent;
@@ -82,7 +81,7 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  z-index: 2;
+  z-index: 0;
 }
 
 .paginationDot {
@@ -115,15 +114,32 @@
 }
 
 .itemName {
-  font-size: $font-size-xxl;
+  font-size: $font-size-xl;
   font-weight: 500;
   margin-bottom: $spacing-sm;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  transform: skew(-5deg);
-    font-family: $font-display;
+  font-family: $font-display;
 
 }
+
+.card {
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.imageWrapper {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.image {
+  width: 100%;
+  display: block;
+  cursor: zoom-in;
+}
+
 
 .itemDescription {
   font-size: $font-size-md;
@@ -146,7 +162,6 @@
   display: flex;
   flex-direction: column;
 }
-
 
 
 .price {
