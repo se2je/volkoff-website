@@ -1,0 +1,234 @@
+@import "@/styles/variables";
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($color-black, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+  overflow-y: auto;
+}
+
+.modalContent {
+  position: relative;
+  background-color: $color-white;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 85vh;
+  overflow-y: auto;
+
+  @media (max-width: $breakpoint-md) {
+    max-height: 85vh;
+
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-white;
+  border: 1px solid $color-black;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $color-black;
+
+    svg {
+      color: $color-white;
+    }
+  }
+
+  svg {
+    color: $color-black;
+  }
+}
+
+.modalBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-xl;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+    gap: $spacing-xs;
+  }
+}
+
+.imageSection {
+  position: relative;
+}
+
+.imageSlider {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: $color-white;
+}
+
+.imagesContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.imageWrapper {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.detailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(30%);
+  cursor: zoom-in;
+}
+
+.sliderButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid $color-black;
+  background-color: $color-white;
+  z-index: 5;
+
+  &:hover {
+    background-color: $color-black;
+
+    svg {
+      color: $color-white;
+    }
+  }
+
+  svg {
+    color: $color-black;
+  }
+}
+
+.prevButton {
+  left: $spacing-md;
+}
+
+.nextButton {
+  right: $spacing-md;
+}
+
+.pagination {
+  position: absolute;
+  bottom: $spacing-md;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 5;
+}
+
+.paginationDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba($color-black, 0.3);
+  border: 1px solid $color-white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.active {
+    background-color: $color-black;
+  }
+
+  &:hover {
+    background-color: rgba($color-black, 0.6);
+  }
+}
+
+.detailsSection {
+  padding: $spacing-xl 2rem 0px 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  @media (max-width: $breakpoint-lg) {
+    padding: $spacing-md;
+  }
+}
+
+.detailsHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.itemName {
+  font-size: $font-size-xxl;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: $font-display;
+  margin-bottom: 0;
+  line-height: 1.2;
+
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xl;
+  }
+}
+
+.itemPrice {
+  font-size: $font-size-xl;
+  font-weight: 500;
+  color: $color-black;
+  margin-bottom: 0;
+}
+
+.itemDescription {
+  font-size: $font-size-md;
+  line-height: 1.6;
+  opacity: 0.85;
+  text-align: justify;
+}
+
+.socialButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background-color: transparent;
+  border: 1px solid $color-black;
+  color: $color-black;
+  font-size: $font-size-md;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+
+  &:hover {
+    background-color: $color-black;
+    color: $color-white;
+  }
+}

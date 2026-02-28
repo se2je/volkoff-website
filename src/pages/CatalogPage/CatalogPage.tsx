@@ -1,13 +1,14 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import styles from './CatalogPage.module.scss';
 
-// Components
-import CatalogItem from './components/CatalogItem';
+import CatalogPreviewCard from './components/CatalogPreviewCard';
+import CatalogDetailsModal from './components/CatalogDetailsModal';
 
-// Data
-import { catalogItems } from './data/catalogItems';
+import { catalogItems, CatalogItemType } from './data/catalogItems';
 
 const CatalogPage: React.FC = () => {
+  const [selectedItem, setSelectedItem] = useState<CatalogItemType | null>(null);
 
   const pageVariants = {
     initial: {
@@ -28,25 +29,35 @@ const CatalogPage: React.FC = () => {
     }
   };
 
-
   return (
-    <motion.div 
-      id="catalog"
-      className={styles.catalogPage}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-    >
-      <div className={styles.container}>
-
-        <div className={styles.grid}>
-          {catalogItems.map((item, index) => (
-            <CatalogItem key={item.id} item={item} index={index} />
-          ))}
+    <>
+      <motion.div
+        id="catalog"
+        className={styles.catalogPage}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <div className={styles.container}>
+          <div className={styles.grid}>
+            {catalogItems.map((item, index) => (
+              <CatalogPreviewCard
+                key={item.id}
+                item={item}
+                index={index}
+                onClick={() => setSelectedItem(item)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      <CatalogDetailsModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
+    </>
   );
 };
 

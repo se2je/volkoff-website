@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import React, {useState, useEffect, useRef} from 'react';
+import {motion, useScroll, useTransform} from 'framer-motion';
+import {useTranslation} from 'react-i18next';
+import {ChevronLeft, ChevronRight, ExternalLink} from 'lucide-react';
 import mediumZoom from 'medium-zoom';
 import styles from './CatalogItem.module.scss';
 
 // Types
-import { CatalogItemType } from '../data/catalogItems';
+import {CatalogItemType} from '../data/catalogItems';
 
 interface CatalogItemProps {
     item: CatalogItemType;
     index: number;
 }
 
-const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
-    const { t, i18n } = useTranslation();
+const CatalogItem: React.FC<CatalogItemProps> = ({item, index}) => {
+    const {t, i18n} = useTranslation();
     const [activeImageIndex, setActiveImageIndex] = useState(0);
 
     const hasMultipleImages = item.images.length > 1;
@@ -23,11 +23,11 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const itemVariants = {
-        initial: { opacity: 0, y: 30 },
+        initial: {opacity: 0, y: 30},
         animate: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.6, delay: index * 0.1 }
+            transition: {duration: 0.6, delay: index * 0.1}
         }
     };
 
@@ -41,7 +41,6 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
         const zoom = mediumZoom(imgs, {
             margin: 10,
             background: 'rgba(0,0,0,0.85)',
-            zIndex: 999,
         });
 
         return () => {
@@ -53,7 +52,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
        SCROLL "TURN TOWARDS YOU" EFFECT (ROTATE X)
     ============================ */
 
-    const { scrollYProgress } = useScroll({
+    const {scrollYProgress} = useScroll({
         target: containerRef,
         offset: ['start end', 'end start']
     });
@@ -77,7 +76,6 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
             prev === 0 ? item.images.length - 1 : prev - 1
         );
     };
-
     const openSocial = () => {
         window.open(item.socialLink, '_blank');
     };
@@ -85,6 +83,12 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
     const getCurrency = () => {
         return i18n.language === 'ru' ? '₽' : '$';
     };
+    const descriptionText = item.description
+        ? t(item.description, {defaultValue: ""})
+        : "";
+
+    const shouldRender = descriptionText.trim().length > 0;
+    console.log("DESC:", JSON.stringify(descriptionText));
 
     return (
         <motion.div
@@ -95,7 +99,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
             <div className={styles.imageSlider}>
                 <div
                     className={styles.imagesContainer}
-                    style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+                    style={{transform: `translateX(-${activeImageIndex * 100}%)`}}
                 >
                     {item.images.map((image, i) => (
                         <div key={i} className={styles.imageWrapper}>
@@ -119,14 +123,14 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
                             className={`${styles.sliderButton} ${styles.prevButton}`}
                             onClick={prevImage}
                         >
-                            <ChevronLeft size={24} />
+                            <ChevronLeft size={24}/>
                         </button>
 
                         <button
                             className={`${styles.sliderButton} ${styles.nextButton}`}
                             onClick={nextImage}
                         >
-                            <ChevronRight size={24} />
+                            <ChevronRight size={24}/>
                         </button>
 
                         <div className={styles.pagination}>
@@ -147,7 +151,13 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
             <div className={styles.itemDetails}>
                 <div>
                     <h2 className={styles.itemName}>{t(item.name)}</h2>
-                    <p className={styles.itemDescription}>{t(item.description)}</p>
+
+                    {shouldRender && (
+                        <p className={styles.itemDescription}>
+                            {descriptionText}
+                        </p>
+                    )}
+
                 </div>
 
                 <div className={styles.itemFooter}>
@@ -159,7 +169,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item, index }) => {
 
                     <button className={styles.socialButton} onClick={openSocial}>
                         <span>{t('catalog.openSocial')}</span>
-                        <ExternalLink size={16} />
+                        <ExternalLink size={16}/>
                     </button>
                 </div>
             </div>

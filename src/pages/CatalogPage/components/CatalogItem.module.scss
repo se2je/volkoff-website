@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid black;
 }
 
 .imageSlider {
@@ -116,7 +115,6 @@
 .itemName {
   font-size: $font-size-xl;
   font-weight: 500;
-  margin-bottom: $spacing-sm;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-family: $font-display;
