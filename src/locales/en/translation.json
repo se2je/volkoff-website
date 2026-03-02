@@ -82,6 +82,56 @@
       "name": "Down jacket ",
       "descr": "Down jacket made of genuine leather, with leopard fur lining, fringe of raccoon fur.",
       "price": "600"
+    },
+    "item11": {
+      "name": "Afgana jacket ",
+      "descr": "Cordura material, water-repellent fabric, IR (infrared protection) drones will not see you. The jacket is for real veterans of the Afghan kush, the texture of the fabric resembles burnt lungs. Be ready to declare war on your addiction.",
+      "price": "430"
+    },
+    "item12": {
+      "name": "FedEx anorak ",
+      "descr": "Material, Cordura, Water-repellent texture, resistant to winds. Anorak for lovers of wall painting and street movement\uD83D\uDE01",
+      "price": "560"
+    },
+    "item13": {
+      "name": "MV Calf Skin Jacket",
+      "descr": "Material, Genuine calf leather, feel like a real cowboy in the wild west of Moscow\n",
+      "price": "300"
+    },
+    "item14": {
+      "name": "DRT Black jeans ",
+      "descr": "Material, Japanese denim (Kurabo) Classic straight cut. The fabric is faded and dirty, as if you spent a week in the sands of Arizona in these jeans. You'll look like Daniel Craig from the movie Cowboys vs Aliens.",
+      "price": "210"
+    },
+    "item15": {
+      "name": "DRT Oliva jeans ",
+      "descr": "Material, Japanese denim (Kurabo) Classic straight cut with low flaring at the bottom. The fabric lay for 2 days in a swampy area. For lovers of forest treasures",
+      "price": "210"
+    },
+    "item16": {
+      "name": "DRT Blue punk jeans ",
+      "descr": "The material is Japanese denim (kurabo) with a classic straight cut. The legendary pale blue color and the color of mud. Always be a young punk, capable of anything. Fall down and get up, and it doesn't matter what you're wearing.",
+      "price": "210"
+    },
+    "item17": {
+      "name": "SSS25 Black cap ",
+      "descr": "ordinary cap \nmade in the general style of the collection",
+      "price": "50"
+    },
+    "item18": {
+      "name": "SSS25 Brown cap ",
+      "descr": "ordinary cap \nmade in the general style of the collection",
+      "price": "50"
+    },
+    "item19": {
+      "name": "SSS25 Khaki cap ",
+      "descr": "ordinary cap \nmade in the general style of the collection\n",
+      "price": "50"
+    },
+    "item20": {
+      "name": "Sporto duffle bag ",
+      "descr": "A large bag for any purpose, travel, painting, escape, harvesting. Made in the general style of things.",
+      "price": "130"
     }
   }
 }

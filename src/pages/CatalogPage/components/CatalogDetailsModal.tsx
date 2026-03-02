@@ -1,36 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { X, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
-import mediumZoom from 'medium-zoom';
+import React, {useState, useEffect} from 'react';
+import {motion, AnimatePresence} from 'framer-motion';
+import {useTranslation} from 'react-i18next';
+import {X, ChevronLeft, ChevronRight, ExternalLink} from 'lucide-react';
 import styles from './CatalogDetailsModal.module.scss';
-import { CatalogItemType } from '../data/catalogItems';
+import {CatalogItemType} from '../data/catalogItems';
 
 interface CatalogDetailsModalProps {
     item: CatalogItemType | null;
     onClose: () => void;
 }
 
-const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose }) => {
-    const { t, i18n } = useTranslation();
+const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({item, onClose}) => {
+    const {t, i18n} = useTranslation();
     const [activeImageIndex, setActiveImageIndex] = useState(0);
-    const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
 
     const hasMultipleImages = item ? item.images.length > 1 : false;
 
     useEffect(() => {
-        if (!item) return;
-
-        const imgs = imageRefs.current.filter(Boolean) as HTMLImageElement[];
-        const zoom = mediumZoom(imgs, {
-            margin: 10,
-            background: 'rgba(0,0,0,0.85)',
-        });
-
-        return () => {
-            zoom.detach();
-        };
-    }, [item, activeImageIndex]);
+        setActiveImageIndex(0);
+    }, [item]);
 
     useEffect(() => {
         if (item) {
@@ -73,12 +61,12 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
     };
 
     const modalVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 }
+        hidden: {opacity: 0},
+        visible: {opacity: 1}
     };
 
     const contentVariants = {
-        hidden: { opacity: 0, y: 50, scale: 0.95 },
+        hidden: {opacity: 0, y: 50, scale: 0.95},
         visible: {
             opacity: 1,
             y: 0,
@@ -93,12 +81,12 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
             opacity: 0,
             y: 50,
             scale: 0.95,
-            transition: { duration: 0.2 }
+            transition: {duration: 0.2}
         }
     };
 
     const descriptionText = item.description
-        ? t(item.description, { defaultValue: "" })
+        ? t(item.description, {defaultValue: ""})
         : "";
 
     const shouldRender = descriptionText.trim().length > 0;
@@ -122,7 +110,7 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
                         exit="exit"
                     >
                         <button className={styles.closeButton} onClick={onClose}>
-                            <X size={24} />
+                            <X size={24}/>
                         </button>
 
                         <div className={styles.modalBody}>
@@ -130,12 +118,11 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
                                 <div className={styles.imageSlider}>
                                     <div
                                         className={styles.imagesContainer}
-                                        style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+                                        style={{transform: `translateX(-${activeImageIndex * 100}%)`}}
                                     >
                                         {item.images.map((image, i) => (
                                             <div key={i} className={styles.imageWrapper}>
                                                 <img
-                                                    ref={(el) => (imageRefs.current[i] = el)}
                                                     src={image}
                                                     alt={t(item.name)}
                                                     className={styles.detailImage}
@@ -150,14 +137,14 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
                                                 className={`${styles.sliderButton} ${styles.prevButton}`}
                                                 onClick={prevImage}
                                             >
-                                                <ChevronLeft size={24} />
+                                                <ChevronLeft size={24}/>
                                             </button>
 
                                             <button
                                                 className={`${styles.sliderButton} ${styles.nextButton}`}
                                                 onClick={nextImage}
                                             >
-                                                <ChevronRight size={24} />
+                                                <ChevronRight size={24}/>
                                             </button>
 
                                             <div className={styles.pagination}>
@@ -184,7 +171,6 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
                                     </p>
                                 </div>
 
-
                                 {shouldRender && (
                                     <p className={styles.itemDescription}>
                                         {descriptionText}
@@ -193,7 +179,7 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({ item, onClose
 
                                 <button className={styles.socialButton} onClick={openSocial}>
                                     <span>{t('catalog.openSocial')}</span>
-                                    <ExternalLink size={18} />
+                                    <ExternalLink size={18}/>
                                 </button>
                             </div>
                         </div>
