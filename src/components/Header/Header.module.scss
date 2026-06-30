@@ -47,19 +47,19 @@
   font-family: $font-display;
   font-size: $font-size-xl;
   line-height:$font-size-xl;
-  font-weight: 500;
+  text-transform: uppercase;
+  font-weight: 600;
   letter-spacing: 0.1em;
   
   .logoLink {
     position: relative;
     display: inline-block;
     color: inherit;
-    transform: skew(-5deg);
     transition: transform 0.3s ease;
     cursor: pointer;
     
     &:hover {
-      transform: skew(-5deg) scale(1.05);
+      transform: scale(1.05);
     }
     
     &::after {

@@ -5,9 +5,16 @@ $color-gray-light: rgba(0, 0, 0, 0.1);
 $color-gray-medium: rgba(0, 0, 0, 0.5);
 $color-gray-dark: rgba(0, 0, 0, 0.8);
 
+@font-face {
+  font-family: 'Norway';
+  src: url('../fonts/norway-5.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$font-display: 'Norway', sans-serif;
 // Typography
 $font-primary: 'IBM Plex Mono',sans-serif;
-$font-display: 'IBM Plex Mono', sans-serif;
 
 $font-size-xs: 0.75rem;    // 12px
 $font-size-sm: 0.875rem;    // 14px

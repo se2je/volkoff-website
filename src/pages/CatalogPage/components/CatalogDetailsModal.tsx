@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {X, ChevronLeft, ChevronRight, ExternalLink} from 'lucide-react';
 import styles from './CatalogDetailsModal.module.scss';
 import {CatalogItemType} from '../data/catalogItems';
+import {localized, formatPrice, getCurrency} from '../utils/catalogFormat';
 
 interface CatalogDetailsModalProps {
     item: CatalogItemType | null;
@@ -50,10 +51,6 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({item, onClose}
         window.open(item.socialLink, '_blank');
     };
 
-    const getCurrency = () => {
-        return i18n.language === 'ru' ? '₽' : '$';
-    };
-
     const handleBackdropClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             onClose();
@@ -85,9 +82,7 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({item, onClose}
         }
     };
 
-    const descriptionText = item.description
-        ? t(item.description, {defaultValue: ""})
-        : "";
+    const descriptionText = localized(item.description, i18n.language);
 
     const shouldRender = descriptionText.trim().length > 0;
 
@@ -124,7 +119,7 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({item, onClose}
                                             <div key={i} className={styles.imageWrapper}>
                                                 <img
                                                     src={image}
-                                                    alt={t(item.name)}
+                                                    alt={localized(item.name, i18n.language)}
                                                     className={styles.detailImage}
                                                 />
                                             </div>
@@ -165,9 +160,9 @@ const CatalogDetailsModal: React.FC<CatalogDetailsModalProps> = ({item, onClose}
 
                             <div className={styles.detailsSection}>
                                 <div className={styles.detailsHeader}>
-                                    <h2 className={styles.itemName}>{t(item.name)}</h2>
+                                    <h2 className={styles.itemName}>{localized(item.name, i18n.language)}</h2>
                                     <p className={styles.itemPrice}>
-                                        {getCurrency()} {t(item.price)}
+                                        {getCurrency(i18n.language)} {formatPrice(item.price, i18n.language)}
                                     </p>
                                 </div>
 

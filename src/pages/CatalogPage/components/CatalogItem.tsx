@@ -7,6 +7,7 @@ import styles from './CatalogItem.module.scss';
 
 // Types
 import {CatalogItemType} from '../data/catalogItems';
+import {localized, formatPrice, getCurrency} from '../utils/catalogFormat';
 
 interface CatalogItemProps {
     item: CatalogItemType;
@@ -80,15 +81,9 @@ const CatalogItem: React.FC<CatalogItemProps> = ({item, index}) => {
         window.open(item.socialLink, '_blank');
     };
 
-    const getCurrency = () => {
-        return i18n.language === 'ru' ? '₽' : '$';
-    };
-    const descriptionText = item.description
-        ? t(item.description, {defaultValue: ""})
-        : "";
+    const descriptionText = localized(item.description, i18n.language);
 
     const shouldRender = descriptionText.trim().length > 0;
-    console.log("DESC:", JSON.stringify(descriptionText));
 
     return (
         <motion.div
@@ -106,7 +101,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({item, index}) => {
                             <motion.img
                                 ref={(el) => (imageRefs.current[i] = el)}
                                 src={image}
-                                alt={t(item.name)}
+                                alt={localized(item.name, i18n.language)}
                                 className={styles.itemImage}
                                 style={{
                                     rotateX,
@@ -150,7 +145,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({item, index}) => {
 
             <div className={styles.itemDetails}>
                 <div>
-                    <h2 className={styles.itemName}>{t(item.name)}</h2>
+                    <h2 className={styles.itemName}>{localized(item.name, i18n.language)}</h2>
 
                     {shouldRender && (
                         <p className={styles.itemDescription}>
@@ -163,7 +158,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({item, index}) => {
                 <div className={styles.itemFooter}>
                     <div className={styles.priceContainer}>
             <span className={styles.price}>
-              {getCurrency()} {t(item.price)}
+              {getCurrency(i18n.language)} {formatPrice(item.price, i18n.language)}
             </span>
                     </div>
 
