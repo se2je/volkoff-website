@@ -75,10 +75,29 @@
   letter-spacing: 0.04em;
 }
 
-.url {
+.font_display {
+  font-family: $font-display;
+}
+
+.font_mono {
   font-family: $font-mono;
-  font-size: 4mm;
   letter-spacing: 0.08em;
+}
+
+.font_body {
+  font-family: $font-body;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.url {
+  letter-spacing: 0.04em;
+}
+
+// ползунки в цвет сайта
+.controls input[type='range'] {
+  width: 100%;
+  accent-color: $ink;
 }
 
 .sheet {

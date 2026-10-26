@@ -9,11 +9,15 @@ const QUIET = 4; // поле вокруг кода в модулях — без 
 export interface QrOptions {
     /** подпись под кодом, например «VOLKOFF_» — пусто, чтобы без подписи */
     caption?: string;
+    /** размер подписи в модулях кода (по умолчанию 2.6) */
+    captionSize?: number;
+    /** CSS font-family подписи */
+    captionFont?: string;
     ink?: string;
     paper?: string;
 }
 
-export const qrSvg = (text: string, { caption = '', ink = '#0b0b0b', paper = '#ffffff' }: QrOptions = {}) => {
+export const qrSvg = (text: string, { caption = '', captionSize = 2.6, captionFont = "'IBM Plex Mono', 'Courier New', monospace", ink = '#0b0b0b', paper = '#ffffff' }: QrOptions = {}) => {
     const qr = QRCode.create(text, { errorCorrectionLevel: 'H' });
     const n = qr.modules.size;
     const data = qr.modules.data;
@@ -43,14 +47,14 @@ export const qrSvg = (text: string, { caption = '', ink = '#0b0b0b', paper = '#f
     );
 
     const side = n + QUIET * 2;
-    const capH = caption ? 4 : 0;
+    const capH = caption ? captionSize * 1.55 : 0;
     const svg =
         `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${side} ${side + capH}" shape-rendering="crispEdges">` +
         `<rect width="${side}" height="${side + capH}" fill="${paper}"/>` +
         `<path d="${d}" fill="${ink}"/>` +
         `<path d="${wolf}" fill="${ink}"/>` +
         (caption
-            ? `<text x="${side / 2}" y="${side + 2.6}" text-anchor="middle" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="2.6" letter-spacing="0.4" fill="${ink}">${caption
+            ? `<text x="${side / 2}" y="${side + captionSize}" text-anchor="middle" font-family="${captionFont.replace(/"/g, "'")}" font-size="${captionSize}" letter-spacing="${captionSize * 0.15}" fill="${ink}">${caption
                   .replace(/&/g, '&amp;')
                   .replace(/</g, '&lt;')}</text>`
             : '') +
