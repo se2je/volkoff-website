@@ -10,6 +10,7 @@ import { openWolfGame, useTapCombo } from '@/lib/wolfFun';
 import Avatar from '../Avatar';
 import MoodFace from '../MoodFace';
 import WolfMark from '../WolfMark';
+import FullMoon from './FullMoon';
 import styles from './Layout.module.scss';
 
 /** Язык и валюта — одна компактная кнопка с выпадашкой, чтобы не мусорить в шапке */
@@ -62,7 +63,7 @@ const Header: React.FC = () => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
-    const onLogoTap = useTapCombo(openWolfGame);
+    const onLogoTap = useTapCombo(() => openWolfGame());
     const user = useAuth((s) => s.user);
     const currency = usePrefs((s) => s.currency);
     const lines = useCart((s) => s.lines);
@@ -121,6 +122,7 @@ const Header: React.FC = () => {
                     <Link to="/" className={styles.logo} aria-label="VOLKOFF" onClick={onLogoTap}>
                         <WolfMark size={26} className={styles.logoMark} />
                         <span>VOLKOFF</span>
+                        <FullMoon />
                     </Link>
 
                     <nav className={styles.nav}>{navLinks}</nav>

@@ -5,11 +5,11 @@
 export const worldWidth = (cssWidth: number) => (cssWidth < 560 ? 420 : 720);
 export const H = 240;
 const GROUND = 204;
-const S = 3;
+export const S = 3;
 
 // День: чёрное на белом. Во время забега — плавно в ночь: белое на чёрном.
 const mix = (a: number, b: number, t: number) => Math.round(a + (b - a) * t);
-const palette = (night: number) => {
+export const palette = (night: number) => {
     const bg = mix(255, 11, night);
     const ink = mix(11, 255, night);
     return {
@@ -19,10 +19,10 @@ const palette = (night: number) => {
     };
 };
 
-type Grid = readonly string[];
+export type Grid = readonly string[];
 
 // Волк смотрит вправо. Два кадра бега + пригнувшийся.
-const RUN_A: Grid = [
+export const RUN_A: Grid = [
     '...........#..#...',
     '...........##.##..',
     '..........#######.',
@@ -36,7 +36,7 @@ const RUN_A: Grid = [
     '..##........##....',
     '.##..........##...',
 ];
-const RUN_B: Grid = [...RUN_A.slice(0, 9), '...###....###.....', '....##....##......', '....##.....##.....'];
+export const RUN_B: Grid = [...RUN_A.slice(0, 9), '...###....###.....', '....##....##......', '....##.....##.....'];
 const DUCK: Grid = [
     '................#..#..',
     '#...............######',
@@ -54,7 +54,7 @@ const BALL: Grid = ['..####..', '.######.', '##.#####', '#.######', '########', 
 const gridW = (g: Grid) => g[0].length * S;
 const gridH = (g: Grid) => g.length * S;
 
-const drawGrid = (ctx: CanvasRenderingContext2D, g: Grid, x: number, y: number, color: string) => {
+export const drawGrid = (ctx: CanvasRenderingContext2D, g: Grid, x: number, y: number, color: string) => {
     ctx.fillStyle = color;
     const ox = Math.round(x);
     const oy = Math.round(y);

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_SETTINGS, type CatalogFacets, type CategoryDto, type NewsDto, type OrderDto, type ProductDto, type SiteContentDto, type SiteSettingsDto } from '@volkoff/shared';
+import { DEFAULT_SETTINGS, type CatalogFacets, type CategoryDto, type NewsDto, type OrderDto, type PackDto, type ProductDto, type SiteContentDto, type SiteSettingsDto } from '@volkoff/shared';
 import { api } from './client';
 
 export interface CatalogParams {
@@ -63,3 +63,8 @@ export const useSiteSettings = () => {
     });
     return data ?? DEFAULT_SETTINGS;
 };
+
+export const useAchievements = (enabled = true) =>
+    useQuery({ queryKey: ['achievements'], queryFn: () => api<{ keys: string[] }>('/me/achievements'), enabled });
+
+export const usePack = () => useQuery({ queryKey: ['pack'], queryFn: () => api<PackDto>('/pack') });

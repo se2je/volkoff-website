@@ -165,7 +165,14 @@
     "logoutAll": "log out everywhere",
     "orders": "orders",
     "noOrders": "no orders yet. fix that?",
-    "since": "with us since {{date}}"
+    "since": "with us since {{date}}",
+    "rerollIn": "again in {{hours}} h",
+    "rerollRule": "avatar and nickname can be rerolled once a day"
+  },
+  "achievements": {
+    "title": "achievements",
+    "unlocked": "achievement",
+    "locked": "not unlocked yet — keep looking"
   },
   "order": {
     "title": "order #{{number}}",
@@ -185,7 +192,14 @@
     "expires": "reserved until {{time}}",
     "items": "items",
     "delivery": "delivery",
-    "paidThanks": "payment received. thank you, you're the best 🖤"
+    "paidThanks": "payment received. thank you, you're the best 🖤",
+    "playWait": "parcels take a while. a jetpack wolf will help you wait",
+    "playBtn": "play while you wait"
+  },
+  "receipt": {
+    "total": "total",
+    "sub": "handmade · made in moscow",
+    "thanks": "thanks for not being in the circus"
   },
   "about": {
     "title": "about",
@@ -219,6 +233,16 @@
     "empty": "quiet for now. the wolf is saving up.",
     "notFound": "no such news. or not anymore."
   },
+  "pack": {
+    "title": "pack",
+    "lead": "everyone who already wears VOLKOFF. nicknames and avatars only — no names or emails.",
+    "empty": "the pack is empty for now. be the first wolf.",
+    "notYet": "you're not here yet — the pack grows with your first purchase.",
+    "you": "← you"
+  },
+  "moon": {
+    "title": "full moon"
+  },
   "notFound": {
     "title": "404",
     "text": "nothing here. just like the point of fast fashion.",
@@ -236,6 +260,7 @@
     "no": "no"
   },
   "errors": {
+    "REROLL_COOLDOWN": "you can reroll once a day",
     "generic": "something went wrong. try again",
     "EMAIL_TAKEN": "this email is already registered",
     "INVALID_CREDENTIALS": "wrong email or password",

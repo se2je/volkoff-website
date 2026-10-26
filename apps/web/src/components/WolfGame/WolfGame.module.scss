@@ -195,6 +195,10 @@
   -webkit-touch-callout: none;
 }
 
+.padSingle {
+  grid-template-columns: 1fr;
+}
+
 .padBtn {
   height: 64px;
   border: 2px solid currentColor;

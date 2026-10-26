@@ -7,10 +7,12 @@ import { api } from '@/api/client';
 import { useOrder } from '@/api/queries';
 import { errorText, useFmt } from '@/lib/format';
 import { toast } from '@/store/toast';
+import { openWolfGame } from '@/lib/wolfFun';
+import OrderTrack, { FLOW } from '@/components/OrderFun/OrderTrack';
+import Receipt from '@/components/OrderFun/Receipt';
+import funStyles from '@/components/OrderFun/OrderFun.module.scss';
 import NotFoundPage from '../NotFoundPage';
 import styles from './Account.module.scss';
-
-const FLOW = ['PENDING_PAYMENT', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'] as const;
 
 const OrderPage: React.FC = () => {
     const { id } = useParams();
@@ -45,14 +47,7 @@ const OrderPage: React.FC = () => {
             <h1 className="page-title">{t('order.title', { number: order.number })}</h1>
 
             {step >= 0 ? (
-                <ol className={styles.timeline}>
-                    {FLOW.map((s, i) => (
-                        <li key={s} className={i <= step ? styles.done : ''}>
-                            <span>{String(i + 1).padStart(2, '0')}</span>
-                            {t(`order.status.${s}`)}
-                        </li>
-                    ))}
-                </ol>
+                <OrderTrack status={order.status} />
             ) : (
                 <div className={`chip ${styles.cancelledChip}`}>{t(`order.status.${order.status}`)}</div>
             )}
@@ -72,6 +67,18 @@ const OrderPage: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {/* оплачен, но ещё не у человека — можно скоротать ожидание */}
+            {step >= 1 && step < FLOW.length - 1 && (
+                <div className={funStyles.playBox}>
+                    <span>{t('order.playWait')}</span>
+                    <button className="btn btn--sm" onClick={() => openWolfGame('fly')}>
+                        ▲ {t('order.playBtn')}
+                    </button>
+                </div>
+            )}
+
+            {step >= 1 && <Receipt order={order} />}
 
             <div className={styles.orderGrid}>
                 <section className="card-box">

@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Dices } from 'lucide-react';
-import { PASSWORD_MIN, type UserDto } from '@volkoff/shared';
+import { ACHIEVEMENTS, PASSWORD_MIN, type UserDto } from '@volkoff/shared';
 import { api } from '@/api/client';
-import { useMyOrders } from '@/api/queries';
+import { useAchievements, useMyOrders } from '@/api/queries';
 import Avatar from '@/components/Avatar';
 import { errorText, useFmt } from '@/lib/format';
 import { useAuth } from '@/store/auth';
@@ -13,11 +13,12 @@ import { toast } from '@/store/toast';
 import styles from './Account.module.scss';
 
 const AccountPage: React.FC = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { money, date } = useFmt();
     const { user, setUser, logout } = useAuth();
     const { data: orders } = useMyOrders();
+    const { data: achievements } = useAchievements();
     const [profile, setProfile] = useState({ fullName: '', phone: '' });
     const [pw, setPw] = useState({ currentPassword: '', newPassword: '' });
     const [spin, setSpin] = useState(0);
@@ -27,6 +28,17 @@ const AccountPage: React.FC = () => {
     }, [user]);
 
     if (!user) return null;
+
+    // «через 13 ч» до следующей перегенерации
+    const waitLabel = (iso: string | null) => {
+        if (!iso) return null;
+        const h = Math.max(1, Math.ceil((new Date(iso).getTime() - Date.now()) / 3_600_000));
+        return t('account.rerollIn', { hours: h });
+    };
+    const avatarWait = waitLabel(user.avatarRerollAt);
+    const nickWait = waitLabel(user.nicknameRerollAt);
+    const got = new Set(achievements?.keys ?? []);
+    const lang = i18n.language.startsWith('en') ? 'en' : 'ru';
 
     const reroll = async (what: 'avatar' | 'nickname') => {
         try {
@@ -85,15 +97,37 @@ const AccountPage: React.FC = () => {
                         {t('account.since', { date: new Date(user.createdAt).toLocaleDateString() })}
                     </div>
                     <div className={styles.rerolls}>
-                        <button className="btn btn--ghost btn--sm" onClick={() => reroll('avatar')}>
-                            <Dices size={14} /> {t('account.rerollAvatar')}
+                        <button className="btn btn--ghost btn--sm" disabled={!!avatarWait} onClick={() => reroll('avatar')}>
+                            <Dices size={14} /> {avatarWait ?? t('account.rerollAvatar')}
                         </button>
-                        <button className="btn btn--ghost btn--sm" onClick={() => reroll('nickname')}>
-                            <Dices size={14} /> {t('account.rerollNick')}
+                        <button className="btn btn--ghost btn--sm" disabled={!!nickWait} onClick={() => reroll('nickname')}>
+                            <Dices size={14} /> {nickWait ?? t('account.rerollNick')}
                         </button>
+                    </div>
+                    <div className="mono muted" style={{ fontSize: 11 }}>
+                        {t('account.rerollRule')}
                     </div>
                 </div>
             </section>
+
+            <h2 className="page-title">
+                {t('achievements.title')}
+                <sup className="mono" style={{ fontSize: '0.45em', marginLeft: 6 }}>
+                    {got.size}/{ACHIEVEMENTS.length}
+                </sup>
+            </h2>
+            <ul className={styles.badges}>
+                {ACHIEVEMENTS.map((a) => {
+                    const open = got.has(a.key);
+                    return (
+                        <li key={a.key} className={open ? styles.badgeOpen : styles.badgeLocked} title={open ? a.hint[lang] : t('achievements.locked')}>
+                            <span className={styles.badgeIcon}>{open ? a.icon : '?'}</span>
+                            <span className={styles.badgeTitle}>{open ? a.title[lang] : '???'}</span>
+                            {open && <span className={styles.badgeHint}>{a.hint[lang]}</span>}
+                        </li>
+                    );
+                })}
+            </ul>
 
             <h2 className="page-title">{t('account.orders')}</h2>
             {orders?.length ? (

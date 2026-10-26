@@ -172,3 +172,8 @@ export const adminOrderUpdateSchema = z.object({
 export const adminUserUpdateSchema = z.object({
     role: z.enum(ROLES),
 });
+
+/** Клиентские достижения, открытые на сайте */
+export const unlockAchievementsSchema = z.object({
+    keys: z.array(z.string().trim().max(40)).max(20),
+});

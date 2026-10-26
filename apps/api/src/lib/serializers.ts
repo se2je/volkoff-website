@@ -1,5 +1,13 @@
 import type { Prisma, User } from '@prisma/client';
 import type { CategoryDto, Locale, OrderDto, ProductDto, UserDto } from '@volkoff/shared';
+import { REROLL_COOLDOWN_MS } from '@volkoff/shared';
+
+/** Когда снова можно перегенерировать — или null, если уже можно */
+const nextReroll = (at: Date | null) => {
+    if (!at) return null;
+    const next = at.getTime() + REROLL_COOLDOWN_MS;
+    return next > Date.now() ? new Date(next).toISOString() : null;
+};
 
 export const toUserDto = (u: User): UserDto => ({
     id: u.id,
@@ -12,6 +20,8 @@ export const toUserDto = (u: User): UserDto => ({
     fullName: u.fullName,
     phone: u.phone,
     createdAt: u.createdAt.toISOString(),
+    avatarRerollAt: nextReroll(u.avatarRerolledAt),
+    nicknameRerollAt: nextReroll(u.nicknameRerolledAt),
 });
 
 export const toCategoryDto = (c: Prisma.CategoryGetPayload<object> & { _count?: { products: number } }): CategoryDto => ({

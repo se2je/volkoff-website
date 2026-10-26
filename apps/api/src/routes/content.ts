@@ -11,6 +11,7 @@ import {
     type ContentKey,
     type NewsDto,
     type NewsUpsertInput,
+    type PackDto,
     type SiteContentDto,
 } from '@volkoff/shared';
 import { prisma } from '../db';
@@ -65,6 +66,28 @@ export async function contentRoutes(app: FastifyInstance) {
     app.get('/content', async () => toContentDto(await prisma.siteContent.findMany()));
 
     app.get('/settings', async () => loadSettings());
+
+    // «Стая» — все, кто уже что-то купил: только ник и аватарка, без личных данных
+    app.get('/pack', async (): Promise<PackDto> => {
+        const users = await prisma.user.findMany({
+            where: { orders: { some: { status: { in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'] } } } },
+            select: {
+                nickname: true,
+                avatarSeed: true,
+                orders: {
+                    where: { status: { in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'] } },
+                    orderBy: { createdAt: 'asc' },
+                    take: 1,
+                    select: { createdAt: true },
+                },
+            },
+            take: 1000,
+        });
+        const members = users
+            .map((u) => ({ nickname: u.nickname, avatarSeed: u.avatarSeed, since: u.orders[0].createdAt.toISOString() }))
+            .sort((a, b) => a.since.localeCompare(b.since));
+        return { count: members.length, members };
+    });
 
     app.get('/news', async () => {
         const news = await prisma.news.findMany({

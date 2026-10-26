@@ -16,6 +16,21 @@ export interface UserDto {
     fullName: string | null;
     phone: string | null;
     createdAt: string;
+    /** Когда снова можно перегенерировать (ISO) — null, если уже можно */
+    avatarRerollAt: string | null;
+    nicknameRerollAt: string | null;
+}
+
+/** Участник «стаи» — тот, кто уже что-то купил. Только ник и аватарка, без личных данных. */
+export interface PackMember {
+    nickname: string;
+    avatarSeed: string;
+    since: string;
+}
+
+export interface PackDto {
+    count: number;
+    members: PackMember[];
 }
 
 export interface AuthResponse {

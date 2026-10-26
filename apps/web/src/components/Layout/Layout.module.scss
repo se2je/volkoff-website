@@ -615,3 +615,18 @@
     opacity: 0;
   }
 }
+
+// Луна в полнолуние — тихо висит справа от логотипа и медленно «дышит»
+.moon {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-left: -4px;
+  color: $muted;
+  animation: moonGlow 4s steps(4) infinite alternate;
+}
+
+@keyframes moonGlow {
+  to {
+    color: $ink;
+  }
+}

@@ -7,3 +7,4 @@ export * from './avatar';
 export * from './cartMood';
 export * from './content';
 export * from './settings';
+export * from './achievements';

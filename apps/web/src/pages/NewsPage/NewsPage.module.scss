@@ -1,5 +1,7 @@
 .page {
-  padding: $sp-xl 0;
+  // longhand — иначе .container со своим padding перебивает отступы
+  padding-top: $sp-xl;
+  padding-bottom: $sp-xl;
 }
 
 .heading {

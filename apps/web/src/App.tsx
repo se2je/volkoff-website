@@ -9,6 +9,7 @@ import CatalogPage from './pages/CatalogPage/CatalogPage';
 import ProductPage from './pages/ProductPage/ProductPage';
 import AboutPage from './pages/AboutPage/AboutPage';
 import NewsPage from './pages/NewsPage/NewsPage';
+import PackPage from './pages/PackPage/PackPage';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 import MockPayPage from './pages/MockPayPage/MockPayPage';
 import { ForgotPasswordPage, LoginPage, RegisterPage, ResetPasswordPage, VerifyEmailPage } from './pages/auth/AuthPages';
@@ -49,6 +50,7 @@ const App: React.FC = () => {
         <Route path="about" element={<AboutPage />} />
         <Route path="news" element={<NewsPage />} />
         <Route path="news/:id" element={<NewsPage />} />
+        <Route path="pack" element={<PackPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="pay/mock/:id" element={<RequireAuth><MockPayPage /></RequireAuth>} />
         <Route path="login" element={<LoginPage />} />

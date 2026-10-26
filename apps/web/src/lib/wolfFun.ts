@@ -1,4 +1,5 @@
 import { useCallback, useRef, type MouseEvent } from 'react';
+import { unlock } from './achievements';
 
 // Пасхалки с пиксельным волком. Всё рисуется прямо в body и само за собой убирается — React не трогаем.
 
@@ -128,12 +129,14 @@ export const installEasterEggs = () => {
         if (keys.join() === KONAMI.join()) {
             keys = [];
             wolfRain(60);
+            unlock('konami');
         }
         if (e.key.length === 1) {
             typed = (typed + e.key.toLowerCase()).slice(-12);
             if (HOWLS.some((w) => typed.endsWith(w))) {
                 typed = '';
                 wolfBurst(innerWidth / 2, innerHeight / 2, 36);
+                unlock('howl');
             }
         }
     });
@@ -152,4 +155,7 @@ export const installEasterEggs = () => {
 
 /** Открыть игру «волк сбегает из цирка» — её слушает WolfGameHost в Layout */
 export const WOLF_GAME_EVENT = 'vk:wolf-game';
-export const openWolfGame = () => window.dispatchEvent(new Event(WOLF_GAME_EVENT));
+export type WolfGameMode = 'run' | 'fly';
+/** run — бег от цирка (5 кликов по волку), fly — волк на ранце (пока ждёшь заказ) */
+export const openWolfGame = (mode: WolfGameMode = 'run') =>
+    window.dispatchEvent(new CustomEvent<WolfGameMode>(WOLF_GAME_EVENT, { detail: mode }));

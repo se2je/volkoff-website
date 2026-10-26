@@ -8,7 +8,7 @@ import styles from './Layout.module.scss';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
-    const onLogoTap = useTapCombo(openWolfGame);
+    const onLogoTap = useTapCombo(() => openWolfGame());
     return (
         <footer className={styles.footer}>
             <div className={`container ${styles.footerInner}`}>
@@ -22,6 +22,7 @@ const Footer: React.FC = () => {
                         <Link to="/catalog">{t('nav.catalog')}</Link>
                         <Link to="/about">{t('nav.about')}</Link>
                         <Link to="/news">{t('news.title')}</Link>
+                        <Link to="/pack">{t('pack.title')}</Link>
                         <Link to="/account">{t('nav.account')}</Link>
                     </div>
                     <div>

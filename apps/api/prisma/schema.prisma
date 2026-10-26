@@ -14,22 +14,26 @@ enum Role {
 }
 
 model User {
-  id              String       @id @default(cuid())
-  email           String       @unique
-  passwordHash    String
-  nickname        String       @unique
-  avatarSeed      String
-  role            Role         @default(USER)
-  locale          String       @default("ru")
-  emailVerifiedAt DateTime?
-  fullName        String?
-  phone           String?
-  consentAt       DateTime?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  sessions        Session[]
-  emailTokens     EmailToken[]
-  orders          Order[]
+  id                 String       @id @default(cuid())
+  email              String       @unique
+  passwordHash       String
+  nickname           String       @unique
+  avatarSeed         String
+  role               Role         @default(USER)
+  locale             String       @default("ru")
+  emailVerifiedAt    DateTime?
+  fullName           String?
+  phone              String?
+  consentAt          DateTime?
+  /// Открытые на сайте достижения (игры, пасхалки); серверные считаются на лету
+  achievements       String[]     @default([])
+  avatarRerolledAt   DateTime?
+  nicknameRerolledAt DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  sessions           Session[]
+  emailTokens        EmailToken[]
+  orders             Order[]
 }
 
 /// Refresh-сессия. В БД лежит только sha256 от токена.
