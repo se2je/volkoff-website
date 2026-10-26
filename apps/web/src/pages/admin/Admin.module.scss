@@ -380,6 +380,42 @@
   gap: 8px;
   font-family: $font-mono;
   font-size: $fs-xs;
+  cursor: help;
+  outline: none;
+}
+
+// Подсказка с данными человека — чёрная карточка как плашки на витрине
+.userHint {
+  position: fixed;
+  z-index: 50;
+  width: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: $ink;
+  color: $paper;
+  font-size: 11px;
+  line-height: 1.4;
+  pointer-events: none;
+
+  :global(.muted) {
+    color: rgba($paper, 0.6);
+  }
+}
+
+.userHintRow {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 8px;
+
+  span:first-child {
+    color: rgba($paper, 0.5);
+  }
+
+  span:last-child {
+    overflow-wrap: anywhere;
+  }
 }
 
 // ---------- editor ----------

@@ -308,9 +308,23 @@ export default async function adminRoutes(app: FastifyInstance) {
                 : undefined,
             orderBy: { createdAt: 'desc' },
             take: 200,
-            include: { _count: { select: { orders: true } } },
+            include: {
+                _count: { select: { orders: true } },
+                // для подсказки в админке: куда доставляли последний раз и когда заходил
+                orders: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 1,
+                    select: { fullName: true, phone: true, country: true, city: true, address: true, postalCode: true },
+                },
+                sessions: { orderBy: { lastUsedAt: 'desc' }, take: 1, select: { lastUsedAt: true } },
+            },
         });
-        return users.map((u) => ({ ...toUserDto(u), orderCount: u._count.orders }));
+        return users.map(({ orders, sessions, _count, ...u }) => ({
+            ...toUserDto(u),
+            orderCount: _count.orders,
+            lastShipping: orders[0] ?? null,
+            lastSeenAt: sessions[0]?.lastUsedAt.toISOString() ?? null,
+        }));
     });
 
     app.patch<{ Params: { id: string } }>('/users/:id', async (req) => {
