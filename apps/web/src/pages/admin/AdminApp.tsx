@@ -11,6 +11,8 @@ import Categories from './Categories';
 import Users from './Users';
 import Content from './Content';
 import News from './News';
+import CartSettings from './CartSettings';
+import RailSettings from './RailSettings';
 import styles from './Admin.module.scss';
 
 const NAV = [
@@ -21,6 +23,8 @@ const NAV = [
     { to: '/admin/users', label: 'люди' },
     { to: '/admin/news', label: 'новости' },
     { to: '/admin/content', label: 'тексты' },
+    { to: '/admin/rail', label: 'лента' },
+    { to: '/admin/cart', label: 'корзина' },
 ];
 
 /** Админка. Интерфейс на русском, контент товаров — на двух языках. */
@@ -61,6 +65,8 @@ const AdminApp: React.FC = () => {
                     <Route path="users" element={<Users />} />
                     <Route path="news" element={<News />} />
                     <Route path="content" element={<Content />} />
+                    <Route path="rail" element={<RailSettings />} />
+                    <Route path="cart" element={<CartSettings />} />
                 </Routes>
             </main>
             <Toasts />

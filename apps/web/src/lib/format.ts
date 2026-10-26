@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { formatMoney, type ContentKey, type Currency, type Locale, type Localized } from '@volkoff/shared';
-import { useSiteContent } from '@/api/queries';
+import { formatMoney, getCartMood, type ContentKey, type Currency, type Locale, type Localized } from '@volkoff/shared';
+import { useSiteContent, useSiteSettings } from '@/api/queries';
 import { usePrefs } from '@/store/prefs';
 
 export const toLocale = (lang: string): Locale => (lang.startsWith('en') ? 'en' : 'ru');
@@ -40,4 +40,12 @@ export const useSiteText = () => {
     const { data } = useSiteContent();
     const locale = toLocale(i18n.language);
     return (key: ContentKey) => data?.[key]?.[locale]?.trim() || t(key);
+};
+
+/** Настроение корзины по сумме — пороги и подписи из админки */
+export const useCartMood = (totalMinor: number, currency: Currency) => {
+    const { i18n } = useTranslation();
+    const { cartMoods } = useSiteSettings();
+    const mood = getCartMood(totalMinor, currency, cartMoods);
+    return { key: mood.key, label: mood.label[toLocale(i18n.language)] || mood.label.ru };
 };

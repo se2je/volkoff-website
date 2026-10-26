@@ -26,7 +26,7 @@ export const contentUpdateSchema = z.object(
 );
 
 // Ссылка новости: только http(s) или путь на сайте — никаких javascript:
-const safeLink = z
+export const safeLink = z
     .string()
     .trim()
     .max(500)

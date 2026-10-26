@@ -2,6 +2,10 @@ import type { FastifyInstance } from 'fastify';
 import type { News, SiteContent } from '@prisma/client';
 import {
     CONTENT_KEYS,
+    DEFAULT_SETTINGS,
+    SETTINGS_SCHEMAS,
+    type SettingKey,
+    type SiteSettingsDto,
     contentUpdateSchema,
     newsUpsertSchema,
     type ContentKey,
@@ -10,7 +14,7 @@ import {
     type SiteContentDto,
 } from '@volkoff/shared';
 import { prisma } from '../db';
-import { notFound } from '../lib/errors';
+import { badRequest, notFound } from '../lib/errors';
 import { parse, requireAdmin } from '../plugins/auth';
 
 const toContentDto = (rows: SiteContent[]): SiteContentDto =>
@@ -43,9 +47,24 @@ const newsData = (input: NewsUpsertInput) => ({
     sortOrder: input.sortOrder,
 });
 
-/** Публичное: тексты сайта и активные новости */
+/** Настройки из БД поверх значений по умолчанию; битые/устаревшие записи игнорируются */
+const loadSettings = async (): Promise<SiteSettingsDto> => {
+    const rows = await prisma.siteSetting.findMany();
+    const result: SiteSettingsDto = { ...DEFAULT_SETTINGS };
+    for (const row of rows) {
+        if (!(row.key in SETTINGS_SCHEMAS)) continue;
+        const key = row.key as SettingKey;
+        const parsed = SETTINGS_SCHEMAS[key].safeParse(row.value);
+        if (parsed.success) (result as Record<SettingKey, unknown>)[key] = parsed.data;
+    }
+    return result;
+};
+
+/** Публичное: тексты сайта, настройки и активные новости */
 export async function contentRoutes(app: FastifyInstance) {
     app.get('/content', async () => toContentDto(await prisma.siteContent.findMany()));
+
+    app.get('/settings', async () => loadSettings());
 
     app.get('/news', async () => {
         const news = await prisma.news.findMany({
@@ -72,6 +91,24 @@ export async function adminContentRoutes(app: FastifyInstance) {
             ),
         );
         return toContentDto(await prisma.siteContent.findMany());
+    });
+
+    app.get('/settings', async () => loadSettings());
+
+    // PUT /api/admin/settings/cartMoods | /tagRail — значение валидируется своей схемой
+    app.put<{ Params: { key: string } }>('/settings/:key', async (req) => {
+        if (!(req.params.key in SETTINGS_SCHEMAS)) throw notFound();
+        const key = req.params.key as SettingKey;
+        const value = parse(SETTINGS_SCHEMAS[key] as never, req.body) as object;
+        await prisma.siteSetting.upsert({ where: { key }, create: { key, value }, update: { value } });
+        return loadSettings();
+    });
+
+    // Сбросить к значениям по умолчанию
+    app.delete<{ Params: { key: string } }>('/settings/:key', async (req) => {
+        if (!(req.params.key in SETTINGS_SCHEMAS)) throw badRequest('UNKNOWN_SETTING');
+        await prisma.siteSetting.deleteMany({ where: { key: req.params.key } });
+        return loadSettings();
     });
 
     app.get('/news', async () => {

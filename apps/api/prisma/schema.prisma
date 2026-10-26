@@ -270,3 +270,10 @@ model News {
 
   @@index([isActive, sortOrder])
 }
+
+/// Настройки сайта из админки (рожицы корзины, лента тегов…): ключ → JSON
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}

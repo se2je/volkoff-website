@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { CatalogFacets, CategoryDto, NewsDto, OrderDto, ProductDto, SiteContentDto } from '@volkoff/shared';
+import { DEFAULT_SETTINGS, type CatalogFacets, type CategoryDto, type NewsDto, type OrderDto, type ProductDto, type SiteContentDto, type SiteSettingsDto } from '@volkoff/shared';
 import { api } from './client';
 
 export interface CatalogParams {
@@ -52,3 +52,13 @@ export const useSiteContent = () =>
     useQuery({ queryKey: ['content'], queryFn: () => api<SiteContentDto>('/content'), staleTime: 5 * 60_000 });
 
 export const useNews = () => useQuery({ queryKey: ['news'], queryFn: () => api<NewsDto[]>('/news'), staleTime: 60_000 });
+
+/** Настройки из админки; пока грузятся — значения по умолчанию, чтобы ничего не мигало */
+export const useSiteSettings = () => {
+    const { data } = useQuery({
+        queryKey: ['settings'],
+        queryFn: () => api<SiteSettingsDto>('/settings'),
+        staleTime: 5 * 60_000,
+    });
+    return data ?? DEFAULT_SETTINGS;
+};

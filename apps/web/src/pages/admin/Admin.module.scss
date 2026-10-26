@@ -737,3 +737,36 @@
     cursor: pointer;
   }
 }
+
+// ---------- настройки корзины / ленты ----------
+.probe {
+  display: flex;
+  align-items: center;
+  gap: $sp-md $sp-lg;
+  flex-wrap: wrap;
+}
+
+.probeResult {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-mono;
+  font-size: $fs-sm;
+}
+
+.railPreview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  background: $ink;
+  color: $paper;
+  padding: 6px 4px;
+  font-family: $font-mono;
+  font-size: 11px;
+
+  span {
+    padding: 2px 10px;
+    border-right: 1px solid rgba($paper, 0.25);
+  }
+}

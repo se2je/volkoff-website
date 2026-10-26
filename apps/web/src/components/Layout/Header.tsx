@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, ShoppingCart, User, X } from 'lucide-react';
-import { getCartMood } from '@volkoff/shared';
 import { cartCount, cartTotal, useCart } from '@/store/cart';
 import { useAuth } from '@/store/auth';
 import { usePrefs } from '@/store/prefs';
+import { useCartMood } from '@/lib/format';
 import Avatar from '../Avatar';
 import MoodFace from '../MoodFace';
 import styles from './Layout.module.scss';
@@ -67,8 +67,8 @@ const Header: React.FC = () => {
     const setCartOpen = useCart((s) => s.setOpen);
 
     const count = cartCount(lines);
-    const mood = getCartMood(cartTotal(lines, currency), currency);
-    const moodTitle = `${t('nav.cart')}: ${t(`cart.mood.${mood.key}`)}`;
+    const mood = useCartMood(cartTotal(lines, currency), currency);
+    const moodTitle = `${t('nav.cart')}: ${mood.label}`;
     const [shake, setShake] = useState(false);
 
     useEffect(() => setMenuOpen(false), [pathname]);

@@ -3,10 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Minus, Plus, X } from 'lucide-react';
-import { getCartMood } from '@volkoff/shared';
 import { cartCount, cartTotal, lineTotal, useCart } from '@/store/cart';
 import MoodFace from '../MoodFace';
-import { useFmt } from '@/lib/format';
+import { useCartMood, useFmt } from '@/lib/format';
 import styles from './CartDrawer.module.scss';
 
 const CartDrawer: React.FC = () => {
@@ -16,7 +15,7 @@ const CartDrawer: React.FC = () => {
     const { lines, open, setOpen, setQuantity, remove } = useCart();
 
     const total = cartTotal(lines, currency);
-    const mood = getCartMood(total, currency);
+    const mood = useCartMood(total, currency);
 
     useEffect(() => {
         if (!open) return;
@@ -70,7 +69,7 @@ const CartDrawer: React.FC = () => {
                                 <MoodFace mood={mood.key} size={44} />
                             </motion.span>
                             <span className={styles.moodText}>
-                                {t('cart.title')}: {t(`cart.mood.${mood.key}`)}
+                                {t('cart.title')}: {mood.label}
                             </span>
                         </div>
 

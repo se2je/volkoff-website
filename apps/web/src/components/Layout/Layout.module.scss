@@ -65,6 +65,58 @@
   }
 }
 
+// ---------------- Strip: та же лента на телефоне, горизонтально под шапкой ----------------
+.strip {
+  display: none;
+  background: $ink;
+  color: $paper;
+  overflow: hidden;
+  height: 26px;
+  align-items: center;
+
+  @media (max-width: $bp-lg) {
+    display: flex;
+  }
+}
+
+.stripTrack {
+  display: flex;
+  width: max-content;
+  animation: stripLeft 70s linear infinite;
+}
+
+.stripRow {
+  display: flex;
+  align-items: center;
+}
+
+.stripItem {
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  padding: 0 0.9rem;
+  color: rgba($paper, 0.8);
+
+  &:is(a):active {
+    color: $paper;
+    text-decoration: underline;
+  }
+}
+
+.stripDot {
+  width: 3px;
+  height: 3px;
+  flex: 0 0 3px;
+  background: rgba($paper, 0.5);
+}
+
+@keyframes stripLeft {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 // ---------------- Header ----------------
 .header {
   position: sticky;
