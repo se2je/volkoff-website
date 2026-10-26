@@ -32,7 +32,7 @@ ${
 
 export const verifyEmailTemplate = (locale: Locale, nickname: string, link: string): Rendered => {
     if (locale === 'en') {
-        const subject = 'Confirm your email — VOLKOFF';
+        const subject = 'Confirm your email — Volkoff';
         return {
             subject,
             html: layout(
@@ -43,7 +43,7 @@ export const verifyEmailTemplate = (locale: Locale, nickname: string, link: stri
             text: `Yo, ${nickname}. Confirm your email: ${link} (valid for 24 hours)`,
         };
     }
-    const subject = 'Подтверди почту — VOLKOFF';
+    const subject = 'Подтверди почту — Volkoff';
     return {
         subject,
         html: layout(
@@ -58,7 +58,7 @@ export const verifyEmailTemplate = (locale: Locale, nickname: string, link: stri
 export const resetPasswordTemplate = (locale: Locale, link: string): Rendered => {
     if (locale === 'en') {
         return {
-            subject: 'Password reset — VOLKOFF',
+            subject: 'Password reset — Volkoff',
             html: layout(
                 'password reset',
                 'Someone (hopefully you) asked to reset the password. The link is valid for 1 hour. If it wasn\'t you — just ignore this email.',
@@ -68,7 +68,7 @@ export const resetPasswordTemplate = (locale: Locale, link: string): Rendered =>
         };
     }
     return {
-        subject: 'Сброс пароля — VOLKOFF',
+        subject: 'Сброс пароля — Volkoff',
         html: layout(
             'сброс пароля',
             'Кто-то (надеемся, ты) запросил сброс пароля. Ссылка действует 1 час. Если это был не ты — просто проигнорируй письмо.',
@@ -90,7 +90,7 @@ export const orderPaidTemplate = (locale: Locale, order: OrderMailData, link: st
     const total = formatMoney(order.total, order.currency, locale);
     if (locale === 'en') {
         return {
-            subject: `Order #${order.number} paid — VOLKOFF`,
+            subject: `Order #${order.number} paid — Volkoff`,
             html: layout(`order #${order.number} paid`, `Payment received, we're packing.<br><br>${list}<br><br><b>Total: ${total}</b>`, {
                 href: link,
                 label: 'VIEW ORDER',
@@ -99,7 +99,7 @@ export const orderPaidTemplate = (locale: Locale, order: OrderMailData, link: st
         };
     }
     return {
-        subject: `Заказ #${order.number} оплачен — VOLKOFF`,
+        subject: `Заказ #${order.number} оплачен — Volkoff`,
         html: layout(`заказ #${order.number} оплачен`, `Оплата пришла, собираем посылку.<br><br>${list}<br><br><b>Итого: ${total}</b>`, {
             href: link,
             label: 'СМОТРЕТЬ ЗАКАЗ',
@@ -112,13 +112,13 @@ export const orderShippedTemplate = (locale: Locale, number: number, tracking: s
     const tr = tracking ? escape(tracking) : '—';
     if (locale === 'en') {
         return {
-            subject: `Order #${number} shipped — VOLKOFF`,
+            subject: `Order #${number} shipped — Volkoff`,
             html: layout(`order #${number} shipped`, `It's on the way.<br><br>Tracking: <b>${tr}</b>`, { href: link, label: 'VIEW ORDER' }, 'en'),
             text: `Order #${number} shipped. Tracking: ${tracking ?? '—'}. ${link}`,
         };
     }
     return {
-        subject: `Заказ #${number} отправлен — VOLKOFF`,
+        subject: `Заказ #${number} отправлен — Volkoff`,
         html: layout(`заказ #${number} отправлен`, `Посылка в пути.<br><br>Трек-номер: <b>${tr}</b>`, { href: link, label: 'СМОТРЕТЬ ЗАКАЗ' }),
         text: `Заказ #${number} отправлен. Трек-номер: ${tracking ?? '—'}. ${link}`,
     };
