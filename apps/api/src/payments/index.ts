@@ -5,13 +5,21 @@ import { enqueueMail } from '../mail/outbox';
 import { orderPaidTemplate } from '../mail/templates';
 import { mockProvider } from './mock';
 import type { PaymentProvider } from './provider';
+import { tkassaConfigured, tkassaProvider } from './tkassa';
 
 const providers: Record<string, PaymentProvider> = {
     mock: mockProvider,
+    tkassa: tkassaProvider,
 };
 
-/** Какой провайдер обслуживает способ оплаты. Сейчас всё идёт через PAYMENT_PROVIDER. */
-export const providerFor = (_method: PaymentMethod): PaymentProvider => providers[env.PAYMENT_PROVIDER];
+/**
+ * Какой провайдер обслуживает способ оплаты:
+ * рубли — Т-Касса, если заданы её ключи; остальное (и рубли без ключей) — тестовый mock.
+ */
+export const providerFor = (method: PaymentMethod): PaymentProvider => {
+    if (method === 'card_rub' && tkassaConfigured()) return tkassaProvider;
+    return providers[env.PAYMENT_PROVIDER];
+};
 
 export const getProvider = (name: string): PaymentProvider | undefined => providers[name];
 

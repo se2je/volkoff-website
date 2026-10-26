@@ -39,8 +39,14 @@ export const useFacets = () =>
 export const useMyOrders = (enabled = true) =>
     useQuery({ queryKey: ['my-orders'], queryFn: () => api<OrderDto[]>('/me/orders'), enabled });
 
+// Пока заказ ждёт оплаты — опрашиваем каждые 4 с: подтверждение от банка приходит вебхуком чуть позже покупателя
 export const useOrder = (id: string | undefined) =>
-    useQuery({ queryKey: ['order', id], queryFn: () => api<OrderDto>(`/orders/${id}`), enabled: !!id });
+    useQuery({
+        queryKey: ['order', id],
+        queryFn: () => api<OrderDto>(`/orders/${id}`),
+        enabled: !!id,
+        refetchInterval: (query) => (query.state.data?.status === 'PENDING_PAYMENT' ? 4000 : false),
+    });
 
 export const useSiteContent = () =>
     useQuery({ queryKey: ['content'], queryFn: () => api<SiteContentDto>('/content'), staleTime: 5 * 60_000 });

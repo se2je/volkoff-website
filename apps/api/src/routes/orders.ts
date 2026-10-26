@@ -79,6 +79,7 @@ export default async function orderRoutes(app: FastifyInstance) {
 
             const shipping = shippingCost(currency, input.shipping.country);
             return tx.order.create({
+                include: { items: true },
                 data: {
                     userId: user.id,
                     currency,
@@ -97,17 +98,30 @@ export default async function orderRoutes(app: FastifyInstance) {
         const payment = await prisma.payment.create({
             data: { orderId: order.id, provider: provider.name, amount: order.total, currency: order.currency },
         });
-        const created = await provider.createPayment({
-            paymentId: payment.id,
-            orderId: order.id,
-            orderNumber: order.number,
-            amount: order.total,
-            currency: order.currency,
-            method: input.paymentMethod,
-            description: `VOLKOFF order #${order.number}`,
-            customerEmail: user.email,
-            returnUrl: `${env.WEB_URL}/account/orders/${order.id}`,
-        });
+        let created;
+        try {
+            created = await provider.createPayment({
+                paymentId: payment.id,
+                orderId: order.id,
+                orderNumber: order.number,
+                amount: order.total,
+                currency: order.currency,
+                method: input.paymentMethod,
+                description: `VOLKOFF, заказ #${order.number}`,
+                customerEmail: user.email,
+                customerPhone: input.shipping.phone,
+                items: order.items.map((i) => ({ name: i.nameRu, unitPrice: i.unitPrice, quantity: i.quantity })),
+                shippingCost: order.shippingCost,
+                returnUrl: `${env.WEB_URL}/account/orders/${order.id}`,
+                expiresAt: order.expiresAt,
+            });
+        } catch (err) {
+            // Шлюз не ответил — снимаем резерв, чтобы вещи не зависли, и отдаём ошибку
+            await prisma.payment.update({ where: { id: payment.id }, data: { status: 'FAILED' } });
+            await cancelOrder(order.id);
+            req.log.error({ err, order: order.number }, 'payment init failed');
+            throw err;
+        }
         await prisma.payment.update({
             where: { id: payment.id },
             data: { providerPaymentId: created.providerPaymentId, redirectUrl: created.redirectUrl },

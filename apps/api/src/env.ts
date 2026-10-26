@@ -38,6 +38,20 @@ const schema = z.object({
     DKIM_PRIVATE_KEY_B64: z.string().default(''),
 
     PAYMENT_PROVIDER: z.enum(['mock']).default('mock'),
+
+    // Т-Касса: включается сама, когда заданы ключ терминала и пароль (тестовые или боевые)
+    TKASSA_TERMINAL_KEY: z.string().default(''),
+    TKASSA_PASSWORD: z.string().default(''),
+    TKASSA_API_URL: z.string().url().default('https://securepay.tinkoff.ru/v2'),
+    /** Система налогообложения для чека: osn | usn_income | usn_income_outcome | esn | patent */
+    TKASSA_TAXATION: z.string().default('usn_income'),
+    /** Ставка НДС в позициях чека: none для УСН без НДС; иначе — значение из документации Т-Кассы */
+    TKASSA_VAT: z.string().default('none'),
+    /** Передавать ли чек (Receipt) — нужно, если к терминалу подключена онлайн-касса / Т-Чеки */
+    TKASSA_SEND_RECEIPT: z
+        .enum(['true', 'false', '1', '0', ''])
+        .default('true')
+        .transform((v) => v === 'true' || v === '1' || v === ''),
     UPLOADS_DIR: z.string().default('./uploads'),
     /** Сколько минут держим резерв неоплаченного заказа */
     ORDER_RESERVATION_MINUTES: z.coerce.number().default(30),

@@ -7,18 +7,36 @@ import { requireAuth } from '../plugins/auth';
 
 export default async function paymentRoutes(app: FastifyInstance) {
     // Вебхуки реальных провайдеров: POST /api/payments/webhook/:provider
-    app.post<{ Params: { provider: string } }>('/webhook/:provider', async (req) => {
+    app.post<{ Params: { provider: string } }>('/webhook/:provider', async (req, reply) => {
         const provider = getProvider(req.params.provider);
         if (!provider?.parseWebhook) throw notFound();
+        const ack = () =>
+            provider.webhookAck
+                ? reply.type(provider.webhookAck.contentType).send(provider.webhookAck.body)
+                : reply.send({ ok: true });
+
         const event = await provider.parseWebhook(req);
-        if (!event) return { ok: true };
+        if (!event) return ack();
         const payment = await prisma.payment.findUnique({
             where: { provider_providerPaymentId: { provider: provider.name, providerPaymentId: event.providerPaymentId } },
         });
-        if (!payment) return { ok: true };
-        if (event.status === 'SUCCEEDED') await markPaymentSucceeded(payment.id, event.raw);
-        else if (event.status === 'FAILED' || event.status === 'CANCELED') await markPaymentFailed(payment.id, event.status, event.raw);
-        return { ok: true };
+        if (!payment) {
+            req.log.warn({ provider: provider.name, id: event.providerPaymentId }, 'webhook for unknown payment');
+            return ack();
+        }
+        if (event.status === 'SUCCEEDED') {
+            // Деньги засчитываем, только если сумма совпала с выставленной
+            if (event.amount !== undefined && event.amount !== payment.amount) {
+                req.log.error({ paymentId: payment.id, expected: payment.amount, got: event.amount }, 'webhook amount mismatch');
+                return ack();
+            }
+            await markPaymentSucceeded(payment.id, event.raw);
+        } else if (event.status === 'FAILED' || event.status === 'CANCELED') {
+            await markPaymentFailed(payment.id, event.status, event.raw);
+        } else if (event.status === 'REFUNDED') {
+            await prisma.payment.update({ where: { id: payment.id }, data: { status: 'REFUNDED' } });
+        }
+        return ack();
     });
 
     // ---------- Тестовый провайдер ----------

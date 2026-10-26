@@ -22,6 +22,7 @@ import { enqueueMail } from '../../mail/outbox';
 import { orderShippedTemplate } from '../../mail/templates';
 import { parse, requireAdmin } from '../../plugins/auth';
 import { cancelOrder } from '../orders';
+import { getProvider } from '../../payments';
 
 export const slugify = (s: string) =>
     s
@@ -257,8 +258,22 @@ export default async function adminRoutes(app: FastifyInstance) {
         if (!order) throw notFound();
 
         if (input.status === 'CANCELLED' || input.status === 'REFUNDED') {
-            // Возвращаем товар на склад. Возврат денег делается в кабинете провайдера (или через provider.refund).
-            await cancelOrder(order.id, input.status);
+            // Если заказ был оплачен через провайдера с API возврата — возвращаем деньги автоматически
+            const paid = await prisma.payment.findFirst({ where: { orderId: order.id, status: 'SUCCEEDED' } });
+            const provider = paid ? getProvider(paid.provider) : undefined;
+            if (paid?.providerPaymentId && provider?.refund) {
+                const items = await prisma.orderItem.findMany({ where: { orderId: order.id } });
+                await provider.refund({
+                    providerPaymentId: paid.providerPaymentId,
+                    amount: paid.amount,
+                    items: items.map((i) => ({ name: i.nameRu, unitPrice: i.unitPrice, quantity: i.quantity })),
+                    shippingCost: order.shippingCost,
+                    customerEmail: order.email,
+                });
+                await prisma.payment.update({ where: { id: paid.id }, data: { status: 'REFUNDED' } });
+            }
+            // Возвращаем товар на склад
+            await cancelOrder(order.id, paid ? 'REFUNDED' : input.status);
         } else if (input.status) {
             await prisma.order.update({ where: { id: order.id }, data: { status: input.status, expiresAt: null } });
         }

@@ -33,6 +33,9 @@ COPY --from=build --chown=node:node /app/packages/shared ./packages/shared
 COPY --from=build --chown=node:node /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build --chown=node:node /app/apps/api/dist ./apps/api/dist
 COPY --from=build --chown=node:node /app/apps/api/prisma ./apps/api/prisma
+# Корневой сертификат Минцифры: без него Node не доверяет API Т-Кассы (securepay.tbank.ru). См. apps/api/certs/README.md
+COPY --chown=node:node apps/api/certs ./apps/api/certs
+ENV NODE_EXTRA_CA_CERTS=/app/apps/api/certs/russian_trusted_ca.pem
 
 RUN mkdir -p /data/uploads && chown -R node:node /data
 USER node
