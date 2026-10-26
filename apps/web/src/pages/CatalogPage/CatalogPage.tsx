@@ -206,8 +206,11 @@ const CatalogPage: React.FC = () => {
                         <button
                             key={s}
                             className={`tag-btn ${sort === s ? 'is-active' : ''}`}
-                            // повторный клик по активному «по вайбу» — перемешать ещё раз
-                            onClick={() => (s === 'manual' && sort === 'manual' ? reroll() : update({ sort: s === DEFAULT_SORT ? undefined : s }))}
+                            // каждый клик по «по вайбу» — сразу новый порядок; назад из карточки сид не меняется
+                            onClick={() => {
+                                if (s === 'manual') reroll();
+                                if (s !== sort) update({ sort: s === DEFAULT_SORT ? undefined : s });
+                            }}
                             title={s === 'manual' ? t('catalog.reroll') : undefined}
                         >
                             {t(`catalog.sort.${s}`)}
