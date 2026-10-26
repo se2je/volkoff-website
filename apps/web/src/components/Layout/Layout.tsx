@@ -7,6 +7,7 @@ import CartDrawer from '../CartDrawer/CartDrawer';
 import Toasts from './Toasts';
 import CookieBanner from './CookieBanner';
 import VerifyBanner from './VerifyBanner';
+import WolfGameHost from '../WolfGame/WolfGameHost';
 
 const Layout: React.FC = () => (
     <div className="app">
@@ -21,6 +22,7 @@ const Layout: React.FC = () => (
         <CartDrawer />
         <Toasts />
         <CookieBanner />
+        <WolfGameHost />
     </div>
 );
 

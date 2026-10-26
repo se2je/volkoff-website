@@ -6,7 +6,7 @@ import { cartCount, cartTotal, useCart } from '@/store/cart';
 import { useAuth } from '@/store/auth';
 import { usePrefs } from '@/store/prefs';
 import { useCartMood } from '@/lib/format';
-import { burstFromEvent, useTapCombo } from '@/lib/wolfFun';
+import { openWolfGame, useTapCombo } from '@/lib/wolfFun';
 import Avatar from '../Avatar';
 import MoodFace from '../MoodFace';
 import WolfMark from '../WolfMark';
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
-    const onLogoTap = useTapCombo(burstFromEvent);
+    const onLogoTap = useTapCombo(openWolfGame);
     const user = useAuth((s) => s.user);
     const currency = usePrefs((s) => s.currency);
     const lines = useCart((s) => s.lines);

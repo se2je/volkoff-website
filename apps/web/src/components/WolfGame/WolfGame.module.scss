@@ -1,0 +1,162 @@
+// Попап игры — белая «консоль» в чёрной рамке поверх затемнения
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: $sp-md;
+  background: rgba($ink, 0.82);
+}
+
+.panel {
+  width: min(760px, 100%);
+  background: $paper;
+  border: 2px solid $ink;
+  font-family: $font-mono;
+  color: $ink;
+  user-select: none;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: $sp-md;
+  padding: 8px 12px;
+  background: $ink;
+  color: $paper;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.cursor {
+  animation: blink 1s steps(2) infinite;
+}
+
+.scores {
+  margin-left: auto;
+  display: flex;
+  gap: $sp-md;
+  font-variant-numeric: tabular-nums;
+}
+
+.best {
+  color: rgba($paper, 0.55);
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  color: $paper;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.stage {
+  position: relative;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  image-rendering: pixelated;
+}
+
+// Реплика волка: пиксельный «пузырь» с хвостиком к морде
+.bubble {
+  position: absolute;
+  left: 9%;
+  top: 8%;
+  max-width: min(420px, 78%);
+  padding: 10px 12px;
+  background: $paper;
+  border: 2px solid $ink;
+  font-size: 12px;
+  line-height: 1.45;
+  pointer-events: none;
+
+  p {
+    margin: 0 0 6px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    bottom: -8px;
+    width: 8px;
+    height: 8px;
+    background: $ink;
+    box-shadow: -6px 6px 0 -1px $ink;
+  }
+}
+
+// На телефоне поле низкое — реплики уезжают над полем, чтобы не закрывать препятствия
+@media (max-width: $bp-sm) {
+  .stage {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .bubble {
+    position: static;
+    max-width: none;
+    margin: 8px 8px 0;
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.quip {
+  top: 22%;
+  font-size: 11px;
+  padding: 6px 10px;
+}
+
+.over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  pointer-events: none;
+
+  strong {
+    font-size: clamp(16px, 4vw, 26px);
+    letter-spacing: 0.3em;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+  }
+}
+
+.blink {
+  font-size: 11px;
+  color: $muted;
+  animation: blink 1s steps(2) infinite;
+}
+
+.hint {
+  padding: 8px 12px;
+  border-top: 1px solid rgba($ink, 0.15);
+  font-size: 10px;
+  color: $muted;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

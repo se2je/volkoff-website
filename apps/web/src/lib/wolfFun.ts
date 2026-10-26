@@ -149,3 +149,7 @@ export const installEasterEggs = () => {
         }
     });
 };
+
+/** Открыть игру «волк сбегает из цирка» — её слушает WolfGameHost в Layout */
+export const WOLF_GAME_EVENT = 'vk:wolf-game';
+export const openWolfGame = () => window.dispatchEvent(new Event(WOLF_GAME_EVENT));
