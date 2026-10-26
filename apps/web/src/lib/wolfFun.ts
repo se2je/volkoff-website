@@ -1,5 +1,6 @@
 import { useCallback, useRef, type MouseEvent } from 'react';
 import { unlock } from './achievements';
+import { installChaser, releaseChaser } from './chaser';
 
 // Пасхалки с пиксельным волком. Всё рисуется прямо в body и само за собой убирается — React не трогаем.
 
@@ -117,6 +118,10 @@ export const installEasterEggs = () => {
 
     console.log(`%c${CONSOLE_WOLF}`, 'font-family:monospace;line-height:1;color:#0b0b0b;background:#f5f5f5;padding:8px');
     console.log('%cVOLKOFF_ — ручная работа. Нашёл консоль? Попробуй ↑↑↓↓←→←→BA или просто напечатай «awoo».', 'font-family:monospace');
+
+    installChaser();
+    // в dev можно вызвать волка руками: __wolfChase() в консоли
+    if (import.meta.env.DEV) (window as unknown as { __wolfChase: () => void }).__wolfChase = () => void releaseChaser();
 
     let keys: string[] = [];
     let typed = '';

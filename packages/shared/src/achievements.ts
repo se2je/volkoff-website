@@ -14,6 +14,7 @@ export const ACHIEVEMENTS = [
     { key: 'konami', source: 'client', icon: '↑↑', title: { ru: 'олдскул', en: 'old school' }, hint: { ru: 'набрал тот самый код', en: 'entered that very code' } },
     { key: 'howl', source: 'client', icon: 'ау', title: { ru: 'вой', en: 'howl' }, hint: { ru: 'написал «awoo» прямо на сайте', en: 'typed «awoo» right on the site' } },
     { key: 'lost', source: 'client', icon: '404', title: { ru: 'заблудился', en: 'lost' }, hint: { ru: 'ткнул волка на несуществующей странице', en: 'poked the wolf on a missing page' } },
+    { key: 'bitten', source: 'client', icon: 'ам', title: { ru: 'покусан', en: 'bitten' }, hint: { ru: 'волк тебя догнал', en: 'the wolf caught you' } },
     { key: 'moon', source: 'client', icon: '○', title: { ru: 'лунатик', en: 'moonwalker' }, hint: { ru: 'зашёл в полнолуние', en: 'came by on a full moon' } },
 ] as const satisfies readonly { key: string; source: 'server' | 'client'; icon: string; title: Localized; hint: Localized }[];
 
