@@ -1,87 +1,163 @@
 import { hashString, mulberry32, pick } from './random';
 
-// Генератор аватарок: симметричный пиксельный «монстрик» 8x8 + глаза и рот.
-// Детерминирован по seed — аватарка хранится в БД только как строка-сид.
+// Генератор аватарок: пиксельный персонаж 10×10 в стиле волка-логотипа и рожиц корзины.
+// Сетка целочисленная (1 клетка = 1 единица viewBox) и рисуется одним path — никаких щелей и полос.
+// Глаза и рот — «прорези» строго внутри головы, поэтому лицо всегда читается.
+// Детерминирован по seed: в БД хранится только строка-сид.
 
-const PALETTES: [bg: string, body: string, accent: string][] = [
-    ['#0b0b0b', '#c8ff00', '#ffffff'],
-    ['#f2f0eb', '#0b0b0b', '#ff3b1f'],
-    ['#ff3b1f', '#0b0b0b', '#f2f0eb'],
-    ['#1d2b1f', '#9bb08a', '#e6ff6b'],
-    ['#2b1d14', '#c48a5a', '#f6e7cf'],
-    ['#e9e4ff', '#4b2bff', '#0b0b0b'],
-    ['#0b0b0b', '#ff6ad5', '#c8ff00'],
-    ['#d9d4c7', '#4a4f3a', '#0b0b0b'],
-    ['#101820', '#f2aa4c', '#ffffff'],
-    ['#ffffff', '#36343b', '#c8ff00'],
+const N = 10;
+
+/** Чёрно-белые сочетания под монохром сайта: [фон, тело, прорези] */
+const PALETTES: [bg: string, body: string, cut: string][] = [
+    ['#f5f5f5', '#0b0b0b', '#f5f5f5'],
+    ['#ffffff', '#0b0b0b', '#ffffff'],
+    ['#e6e6e6', '#0b0b0b', '#ffffff'],
+    ['#0b0b0b', '#ffffff', '#0b0b0b'],
+    ['#0b0b0b', '#e6e6e6', '#0b0b0b'],
 ];
 
-const GRID = 8;
+type Cells = Set<string>;
+const key = (x: number, y: number) => `${x},${y}`;
+
+/** Клетка и её зеркальная пара — персонаж всегда симметричный */
+const sym = (c: Cells, x: number, y: number) => {
+    if (x < 0 || x >= N || y < 0 || y >= N) return;
+    c.add(key(x, y));
+    c.add(key(N - 1 - x, y));
+};
+
+const toPath = (c: Cells) =>
+    [...c]
+        .map((k) => {
+            const [x, y] = k.split(',').map(Number);
+            return `M${x} ${y}h1v1h-1z`;
+        })
+        .join('');
 
 export const generateAvatarSvg = (seed: string, size = 128): string => {
     const rnd = mulberry32(hashString(seed));
-    const [bg, body, accent] = pick(rnd, PALETTES);
-    const cell = size / (GRID + 2);
-    const offset = cell;
-    const rects: string[] = [];
+    const [bg, bodyColor, cutColor] = pick(rnd, PALETTES);
+    const body: Cells = new Set();
+    const holes: Cells = new Set();
 
-    // Тело: левая половина случайно, правая — зеркально
-    const filled: boolean[][] = [];
-    for (let y = 0; y < GRID; y++) {
-        filled[y] = [];
-        for (let x = 0; x < GRID / 2; x++) {
-            // Центр заполняем чаще, края реже — так выходит силуэт, а не шум
-            const centerBias = x / (GRID / 2);
-            const v = rnd() < 0.35 + centerBias * 0.45;
-            filled[y][x] = v;
-            filled[y][GRID - 1 - x] = v;
+    // ---------- голова: строки 3..8, ширина 8 (x 1..8) или 6 (x 2..7) ----------
+    const wide = rnd() < 0.65;
+    const L = wide ? 1 : 2; // левый край головы
+    const top = 3;
+    const bottom = 8;
+    for (let y = top; y <= bottom; y++) for (let x = L; x <= 4; x++) sym(body, x, y);
+    // форма: скруглённый низ / «клин» как у волка / квадрат
+    const shape = Math.floor(rnd() * 3);
+    if (shape === 0) {
+        body.delete(key(L, bottom));
+        body.delete(key(N - 1 - L, bottom));
+    } else if (shape === 1) {
+        body.delete(key(L, bottom));
+        body.delete(key(N - 1 - L, bottom));
+        if (wide) {
+            body.delete(key(L + 1, bottom));
+            body.delete(key(N - 2 - L, bottom));
         }
-    }
-    for (let y = 0; y < GRID; y++) {
-        for (let x = 0; x < GRID; x++) {
-            if (filled[y][x]) {
-                rects.push(
-                    `<rect x="${offset + x * cell}" y="${offset + y * cell}" width="${cell + 0.5}" height="${cell + 0.5}" fill="${body}"/>`,
-                );
-            }
-        }
+        sym(body, 4, bottom + 1); // подбородок
     }
 
-    // Глаза
-    const eyeY = 2 + Math.floor(rnd() * 2);
-    const eyeX = 1 + Math.floor(rnd() * 2);
-    const eyeStyle = Math.floor(rnd() * 3);
-    for (const ex of [eyeX, GRID - 1 - eyeX]) {
-        const cx = offset + ex * cell;
-        const cy = offset + eyeY * cell;
-        if (eyeStyle === 0) {
-            rects.push(`<rect x="${cx}" y="${cy}" width="${cell}" height="${cell}" fill="${accent}"/>`);
-        } else if (eyeStyle === 1) {
-            rects.push(`<circle cx="${cx + cell / 2}" cy="${cy + cell / 2}" r="${cell * 0.55}" fill="${accent}"/>`);
-            rects.push(`<circle cx="${cx + cell / 2}" cy="${cy + cell / 2}" r="${cell * 0.22}" fill="${bg}"/>`);
-        } else {
-            // «X» — как крестик в лого
-            const p = cell * 0.15;
-            rects.push(
-                `<path d="M${cx + p} ${cy + p}L${cx + cell - p} ${cy + cell - p}M${cx + cell - p} ${cy + p}L${cx + p} ${cy + cell - p}" stroke="${accent}" stroke-width="${cell * 0.28}" stroke-linecap="square"/>`,
-            );
-        }
+    // ---------- что сверху ----------
+    const topper = Math.floor(rnd() * 6);
+    if (topper === 0) {
+        // уши
+        sym(body, L, top - 1);
+        sym(body, L, top - 2);
+        sym(body, L + 1, top - 1);
+    } else if (topper === 1) {
+        // рога в стороны
+        sym(body, L - 1 >= 0 ? L - 1 : 0, top - 2);
+        sym(body, L, top - 1);
+    } else if (topper === 2) {
+        // ирокез
+        sym(body, 4, top - 1);
+        sym(body, 4, top - 2);
+        sym(body, 4, top - 3);
+    } else if (topper === 3) {
+        // антенна с шариком
+        sym(body, 4, top - 1);
+        sym(body, 3, top - 2);
+        sym(body, 3, top - 3);
+    } else if (topper === 4) {
+        // острые уши как у волка
+        sym(body, L, top - 1);
+        sym(body, L, top - 2);
+        sym(body, L + 1, top - 1);
+        sym(body, L + 2, top - 1);
+    }
+    // 5 — лысый
+
+    // ---------- глаза: всегда с отступом от края головы ----------
+    // узкой голове — только варианты, которые не упираются в край
+    const eyeKinds = wide ? ['dots', 'tall', 'cyclops', 'angry', 'slits'] : ['dots', 'tall', 'cyclops'];
+    const eyes = pick(rnd, eyeKinds);
+    const tallEyes = eyes === 'tall' || eyes === 'angry';
+    const eyeY = tallEyes ? top + 1 : top + 1 + (rnd() < 0.5 ? 1 : 0);
+    if (eyes === 'dots') {
+        sym(holes, 3, eyeY);
+    } else if (eyes === 'tall') {
+        sym(holes, 3, eyeY);
+        sym(holes, 3, eyeY + 1);
+    } else if (eyes === 'cyclops') {
+        sym(holes, 4, eyeY);
+    } else if (eyes === 'angry') {
+        // внешний край выше, внутренний ниже — злой прищур
+        sym(holes, 2, eyeY);
+        sym(holes, 3, eyeY + 1);
+    } else {
+        // широкие щёлки
+        sym(holes, 2, eyeY);
+        sym(holes, 3, eyeY);
+    }
+    const eyeBottom = eyeY + (tallEyes ? 1 : 0);
+
+    // ---------- рот: минимум одна пустая строка под глазами, не на нижнем ряду ----------
+    const mouthY = Math.min(bottom - 1, eyeBottom + 2 + (rnd() < 0.4 ? 1 : 0));
+    const mouths = wide ? ['flat', 'o', 'smile', 'grin'] : ['flat', 'o', 'smile'];
+    const mouth = pick(rnd, mouths);
+    if (mouth === 'flat') {
+        sym(holes, 3, mouthY);
+        sym(holes, 4, mouthY);
+    } else if (mouth === 'o') {
+        sym(holes, 4, mouthY);
+    } else if (mouth === 'smile') {
+        sym(holes, 4, mouthY);
+        // уголки вверх — только если не слипнутся с глазами
+        if (mouthY - 1 > eyeBottom + 1) sym(holes, 3, mouthY - 1);
+        else sym(holes, 3, mouthY);
+    } else {
+        // широкая ухмылка от края до края
+        sym(holes, 2, mouthY);
+        sym(holes, 3, mouthY);
+        sym(holes, 4, mouthY);
     }
 
-    // Рот
-    const mouthY = offset + (eyeY + 2 + Math.floor(rnd() * 2)) * cell;
-    const mouthW = 2 + Math.floor(rnd() * 3);
-    const mouthX = offset + ((GRID - mouthW) / 2) * cell;
-    rects.push(`<rect x="${mouthX}" y="${mouthY}" width="${mouthW * cell}" height="${cell * 0.5}" fill="${accent}"/>`);
-
-    // Иногда — «скотч» по диагонали, для бунтарства
-    if (rnd() < 0.25) {
-        rects.push(
-            `<rect x="${-size * 0.2}" y="${size * 0.78}" width="${size * 1.4}" height="${cell * 0.9}" fill="${accent}" opacity="0.9" transform="rotate(-12 ${size / 2} ${size / 2})"/>`,
+    // ---------- центрируем персонажа по вертикали (у «лысых» иначе пусто сверху) ----------
+    const ys = [...body].map((k) => Number(k.split(',')[1]));
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+    const dy = Math.floor((N - (maxY - minY + 1)) / 2) - minY;
+    const shift = (c: Cells): Cells =>
+        new Set(
+            [...c].map((k) => {
+                const [x, y] = k.split(',').map(Number);
+                return key(x, y + dy);
+            }),
         );
-    }
+    const bodyCells = dy ? shift(body) : body;
+    const holeCells = dy ? shift(holes) : holes;
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect width="${size}" height="${size}" fill="${bg}"/>${rects.join('')}</svg>`;
+    return (
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${N} ${N}" width="${size}" height="${size}" shape-rendering="crispEdges">` +
+        `<rect width="${N}" height="${N}" fill="${bg}"/>` +
+        `<path d="${toPath(bodyCells)}" fill="${bodyColor}"/>` +
+        `<path d="${toPath(holeCells)}" fill="${cutColor}"/>` +
+        `</svg>`
+    );
 };
 
 export const avatarDataUri = (seed: string, size = 128): string =>
