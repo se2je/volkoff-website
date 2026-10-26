@@ -159,8 +159,8 @@
 
 .cartCount {
   position: absolute;
-  top: 2px;
-  left: 22px;
+  top: 3px;
+  left: 20px;
   min-width: 15px;
   height: 15px;
   padding: 0 3px;
@@ -177,8 +177,10 @@
   padding-right: 6px;
 }
 
+// рожица отодвинута от иконки, чтобы не перекрывать счётчик
 .mood {
   display: inline-block;
+  margin-left: 10px;
   animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 
