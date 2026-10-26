@@ -16,6 +16,26 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: $ink transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $ink;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
 }
 
 body {

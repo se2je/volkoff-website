@@ -5,3 +5,4 @@ export * from './random';
 export * from './nickname';
 export * from './avatar';
 export * from './cartMood';
+export * from './content';

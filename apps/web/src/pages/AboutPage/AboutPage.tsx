@@ -1,18 +1,22 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONTACTS } from '@/config/site';
+import { useSiteText } from '@/lib/format';
 import styles from './AboutPage.module.scss';
 
 const AboutPage: React.FC = () => {
     const { t } = useTranslation();
+    const text = useSiteText();
     return (
         <div className={`container ${styles.page}`}>
-            <h1 className={styles.huge}>VOLKOFF</h1>
+            <h1 className={styles.huge} aria-label="VOLKOFF">
+                VOLKOFF
+            </h1>
             <div className={styles.grid}>
-                <p className={styles.lead}>{t('about.lead')}</p>
+                <p className={styles.lead}>{text('about.lead')}</p>
                 <div className={styles.text}>
-                    <p>{t('about.text')}</p>
-                    <p className={styles.mission}>{t('about.mission')}</p>
+                    <p>{text('about.text')}</p>
+                    <p className={styles.mission}>{text('about.mission')}</p>
                 </div>
             </div>
             <h2 className="page-title">{t('about.contacts')}</h2>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Rows3, SlidersHorizontal, X } from 'lucide-react';
+import { ChevronDown, LayoutGrid, Rows3, X } from 'lucide-react';
 import { useCategories, useFacets, useProducts } from '@/api/queries';
 import ProductCard from '@/components/ProductCard/ProductCard';
-import { useFmt } from '@/lib/format';
+import NewsSlider from '@/components/NewsSlider/NewsSlider';
+import { useFmt, useSiteText } from '@/lib/format';
 import { usePrefs } from '@/store/prefs';
 import styles from './CatalogPage.module.scss';
 
@@ -14,8 +15,8 @@ const CatalogPage: React.FC = () => {
     const { t } = useTranslation();
     const { l, currency } = useFmt();
     const { view, setView } = usePrefs();
+    const text = useSiteText();
     const [params, setParams] = useSearchParams();
-    const [filtersOpen, setFiltersOpen] = useState(false);
 
     const category = params.get('category') ?? undefined;
     const size = params.get('size') ?? undefined;
@@ -24,6 +25,11 @@ const CatalogPage: React.FC = () => {
     const inStock = params.get('inStock') === '1';
     const min = params.get('min') ? Number(params.get('min')) : undefined;
     const max = params.get('max') ? Number(params.get('max')) : undefined;
+
+    // Сколько «дополнительных» фильтров активно — показываем на кнопке «фильтры»
+    const activeFilters = [size, inStock || undefined, min, max, sort !== 'manual' ? sort : undefined].filter(Boolean).length;
+    // Панель фильтров свёрнута; если пришли по ссылке с фильтрами — сразу открыта
+    const [filtersOpen, setFiltersOpen] = useState(activeFilters > 0);
 
     const [search, setSearch] = useState(q);
     useEffect(() => setSearch(q), [q]);
@@ -54,12 +60,13 @@ const CatalogPage: React.FC = () => {
 
     return (
         <div className={`container ${styles.page}`}>
+            <NewsSlider />
             <header className={styles.hero}>
                 <h1 className={styles.bigWord}>
                     {t('catalog.title')}
                     <sup>{products?.length ?? ''}</sup>
                 </h1>
-                <p className={styles.lead}>{t('catalog.lead')}</p>
+                <p className={styles.lead}>{text('catalog.lead')}</p>
             </header>
 
             <div className={styles.toolbar}>
@@ -87,8 +94,14 @@ const CatalogPage: React.FC = () => {
                         onChange={(e) => setSearch(e.target.value)}
                         aria-label={t('catalog.search')}
                     />
-                    <button className={`btn btn--ghost btn--sm ${styles.filterToggle}`} onClick={() => setFiltersOpen((v) => !v)}>
-                        <SlidersHorizontal size={14} /> {t('catalog.filters')}
+                    <button
+                        className={`${styles.filterToggle} ${filtersOpen ? styles.filterToggleOn : ''}`}
+                        onClick={() => setFiltersOpen((v) => !v)}
+                        aria-expanded={filtersOpen}
+                    >
+                        {t('catalog.filters')}
+                        {activeFilters > 0 && <sup>{activeFilters}</sup>}
+                        <ChevronDown size={14} strokeWidth={1.5} className={styles.chevron} />
                     </button>
                     <div className={styles.viewToggle}>
                         <button

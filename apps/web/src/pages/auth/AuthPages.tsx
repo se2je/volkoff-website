@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { PASSWORD_MIN, type AuthResponse, type UserDto } from '@volkoff/shared';
 import { api, refreshSession } from '@/api/client';
-import Avatar from '@/components/Avatar';
 import { errorText, toLocale } from '@/lib/format';
 import { useAuth } from '@/store/auth';
 import { toast } from '@/store/toast';
@@ -94,14 +93,6 @@ export const RegisterPage: React.FC = () => {
     const [consent, setConsent] = useState(false);
     const [error, setError] = useState('');
     const [busy, setBusy] = useState(false);
-    // Превью аватарки, пока заполняешь форму — просто для фана
-    const [previewSeed, setPreviewSeed] = useState(() => Math.random().toString(36).slice(2));
-
-    useEffect(() => {
-        const id = setInterval(() => setPreviewSeed(Math.random().toString(36).slice(2)), 900);
-        return () => clearInterval(id);
-    }, []);
-
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!consent) return;
@@ -123,15 +114,7 @@ export const RegisterPage: React.FC = () => {
     };
 
     return (
-        <AuthShell
-            title={t('auth.registerTitle')}
-            aside={
-                <>
-                    <Avatar seed={previewSeed} size={160} />
-                    <p className="mono muted">{t('auth.registerPerk')}</p>
-                </>
-            }
-        >
+        <AuthShell title={t('auth.registerTitle')}>
             <form onSubmit={submit} className={styles.form}>
                 <label className="field">
                     <span className="field__label">{t('auth.email')}</span>

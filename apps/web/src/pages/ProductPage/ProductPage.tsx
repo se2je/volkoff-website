@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
@@ -14,6 +14,10 @@ import styles from './ProductPage.module.scss';
 
 const ProductPage: React.FC = () => {
     const { slug } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    // «Назад» через историю — так возвращаются фильтры и позиция скролла каталога
+    const goBack = () => (location.key !== 'default' ? navigate(-1) : navigate('/catalog'));
     const { t } = useTranslation();
     const { l, price, currency } = useFmt();
     const { data: product, isLoading, isError } = useProduct(slug);
@@ -27,6 +31,17 @@ const ProductPage: React.FC = () => {
         setActive(0);
         setSize(null);
     }, [slug]);
+
+    useEffect(() => {
+        if (!zoom) return;
+        document.body.style.overflow = 'hidden';
+        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setZoom(false);
+        window.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('keydown', onKey);
+        };
+    }, [zoom]);
 
     useEffect(() => {
         if (product) document.title = `${l(product.name)} — VOLKOFF`;
@@ -58,9 +73,9 @@ const ProductPage: React.FC = () => {
 
     return (
         <div className={`container ${styles.page}`}>
-            <Link to="/catalog" className={styles.back}>
+            <button onClick={goBack} className={styles.back}>
                 {t('product.back')}
-            </Link>
+            </button>
 
             <div className={styles.layout}>
                 <div className={styles.gallery}>

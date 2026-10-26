@@ -243,3 +243,30 @@ model Payment {
   @@unique([provider, providerPaymentId])
   @@index([orderId])
 }
+
+/// Редактируемые тексты сайта (ключ → RU/EN)
+model SiteContent {
+  key       String   @id
+  ru        String   @default("")
+  en        String   @default("")
+  updatedAt DateTime @updatedAt
+}
+
+/// Новости / анонсы над каталогом
+model News {
+  id          String   @id @default(cuid())
+  titleRu     String
+  titleEn     String
+  textRu      String   @default("")
+  textEn      String   @default("")
+  imageUrl    String?
+  linkUrl     String?
+  linkLabelRu String   @default("")
+  linkLabelEn String   @default("")
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}

@@ -1,9 +1,10 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import Layout from './components/Layout/Layout';
 import { RequireAdmin, RequireAuth } from './components/Guards';
+import ScrollManager from './components/ScrollManager';
 import CatalogPage from './pages/CatalogPage/CatalogPage';
 import ProductPage from './pages/ProductPage/ProductPage';
 import AboutPage from './pages/AboutPage/AboutPage';
@@ -23,7 +24,6 @@ const AdminApp = lazy(() => import('./pages/admin/AdminApp'));
 const App: React.FC = () => {
   const { i18n } = useTranslation();
   const bootstrap = useAuth((s) => s.bootstrap);
-  const { pathname } = useLocation();
 
   useEffect(() => {
     void bootstrap();
@@ -36,11 +36,9 @@ const App: React.FC = () => {
     if (!prefs.currencyPinned) prefs.setCurrency(i18n.language.startsWith('en') ? 'USD' : 'RUB', false);
   }, [i18n.language]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0 });
-  }, [pathname]);
-
   return (
+    <>
+    <ScrollManager />
     <Routes>
       <Route path="/admin/*" element={<RequireAdmin><Suspense fallback={<div className="spinner">…</div>}><AdminApp /></Suspense></RequireAdmin>} />
       <Route element={<Layout />}>
@@ -61,6 +59,7 @@ const App: React.FC = () => {
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
+    </>
   );
 };
 

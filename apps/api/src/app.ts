@@ -13,6 +13,7 @@ import { HttpError } from './lib/errors';
 import adminRoutes from './routes/admin';
 import authRoutes from './routes/auth';
 import catalogRoutes from './routes/catalog';
+import { adminContentRoutes, contentRoutes } from './routes/content';
 import meRoutes from './routes/me';
 import orderRoutes from './routes/orders';
 import paymentRoutes from './routes/payments';
@@ -74,6 +75,8 @@ export const buildApp = async () => {
     await app.register(orderRoutes, { prefix: '/api/orders' });
     await app.register(paymentRoutes, { prefix: '/api/payments' });
     await app.register(adminRoutes, { prefix: '/api/admin' });
+    await app.register(contentRoutes, { prefix: '/api' });
+    await app.register(adminContentRoutes, { prefix: '/api/admin' });
 
     return app;
 };

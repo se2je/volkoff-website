@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { formatMoney, type Currency, type Locale, type Localized } from '@volkoff/shared';
+import { formatMoney, type ContentKey, type Currency, type Locale, type Localized } from '@volkoff/shared';
+import { useSiteContent } from '@/api/queries';
 import { usePrefs } from '@/store/prefs';
 
 export const toLocale = (lang: string): Locale => (lang.startsWith('en') ? 'en' : 'ru');
@@ -31,4 +32,12 @@ export const errorText = (t: (k: string) => string, err: unknown): string => {
         if (translated !== key) return translated;
     }
     return t('errors.generic');
+};
+
+/** Текст сайта из админки; если там пусто — значение по умолчанию из переводов */
+export const useSiteText = () => {
+    const { t, i18n } = useTranslation();
+    const { data } = useSiteContent();
+    const locale = toLocale(i18n.language);
+    return (key: ContentKey) => data?.[key]?.[locale]?.trim() || t(key);
 };

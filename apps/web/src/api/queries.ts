@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { CatalogFacets, CategoryDto, OrderDto, ProductDto } from '@volkoff/shared';
+import type { CatalogFacets, CategoryDto, NewsDto, OrderDto, ProductDto, SiteContentDto } from '@volkoff/shared';
 import { api } from './client';
 
 export interface CatalogParams {
@@ -41,3 +41,8 @@ export const useMyOrders = (enabled = true) =>
 
 export const useOrder = (id: string | undefined) =>
     useQuery({ queryKey: ['order', id], queryFn: () => api<OrderDto>(`/orders/${id}`), enabled: !!id });
+
+export const useSiteContent = () =>
+    useQuery({ queryKey: ['content'], queryFn: () => api<SiteContentDto>('/content'), staleTime: 5 * 60_000 });
+
+export const useNews = () => useQuery({ queryKey: ['news'], queryFn: () => api<NewsDto[]>('/news'), staleTime: 60_000 });

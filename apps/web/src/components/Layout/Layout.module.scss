@@ -70,7 +70,7 @@
   position: sticky;
   top: 0;
   z-index: $z-header;
-  background: rgba($paper, 0.92);
+  background: rgba($paper, 0.94);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid $faint;
 }
@@ -81,6 +81,10 @@
   align-items: center;
   gap: $sp-lg;
   height: 64px;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr auto;
+  }
 }
 
 .logo {
@@ -99,7 +103,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 4vw, 4rem);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
   font-size: $fs-md;
 
   a {
@@ -115,128 +119,66 @@
     color: $ink;
   }
 
-  .navAdmin {
-    font-family: $font-mono;
-    font-size: $fs-xs;
-    color: $ink;
-    border: 1px solid $ink;
-    padding: 2px 6px;
-  }
-
   @media (max-width: $bp-lg) {
-    position: fixed;
-    inset: 64px 0 0 0;
-    background: $paper;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: $sp-lg $gutter;
-    gap: $sp-lg;
-    font-size: $fs-xxl;
-    font-family: $font-display;
-    transform: translateX(100%);
-    transition: transform 0.25s ease;
-
-    a {
-      color: $ink;
-    }
+    display: none;
   }
 }
 
-.navOpen {
-  transform: none;
-}
-
-.switchers {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+.navAdmin {
   font-family: $font-mono;
   font-size: $fs-xs;
-  color: $muted;
-
-  button {
-    color: $muted;
-    padding: 2px 4px;
-
-    &:hover {
-      color: $ink;
-    }
-  }
-
-  .on {
-    color: $paper;
-    background: $ink;
-  }
-
-  .sep {
-    width: 1px;
-    height: 14px;
-    background: $faint;
-    margin: 0 0.4rem;
-  }
-
-  @media (max-width: $bp-lg) {
-    font-size: $fs-md;
-  }
+  color: $ink !important;
+  border: 1px solid $ink;
+  padding: 2px 6px;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: $sp-md;
-}
+  gap: 0.35rem;
 
-.account {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: $fs-sm;
-
-  &:hover .nick {
-    text-decoration: underline;
-  }
-}
-
-.nick {
-  font-family: $font-mono;
-  font-size: $fs-xs;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  @media (max-width: $bp-md) {
+  @media (max-width: $bp-lg) {
     display: none;
   }
 }
 
-.cartBtn {
-  display: flex;
+.iconBtn {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: $fs-md;
-  white-space: nowrap;
+  gap: 6px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  transition: border-color 0.15s;
 
   &:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    border-color: $ink;
   }
 }
 
 .cartCount {
+  position: absolute;
+  top: 2px;
+  left: 22px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  display: grid;
+  place-items: center;
+  background: $ink;
+  color: $paper;
   font-family: $font-mono;
-  font-size: $fs-sm;
-  color: $muted;
+  font-size: 9px;
+  line-height: 1;
 }
 
-.cartCountOn {
-  color: $ink;
+.cartBtn {
+  padding-right: 6px;
 }
 
-.cartEmoji {
+.mood {
   display: inline-block;
-  font-size: 1.15em;
   animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 
@@ -257,15 +199,185 @@
   80% { transform: translateX(2px); }
 }
 
+// Язык / валюта
+.prefs {
+  position: relative;
+}
+
+.prefsBtn {
+  height: 36px;
+  padding: 0 10px;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  color: $muted;
+  border: 1px solid transparent;
+
+  &:hover,
+  &[aria-expanded='true'] {
+    color: $ink;
+    border-color: $ink;
+  }
+}
+
+.prefsPop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: $paper;
+  border: 1px solid $ink;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.prefsRow {
+  display: flex;
+  gap: 4px;
+
+  button {
+    flex: 1;
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    padding: 6px 10px;
+    color: $muted;
+    border: 1px solid $faint;
+    white-space: nowrap;
+
+    &:hover {
+      color: $ink;
+      border-color: $ink;
+    }
+  }
+
+  .on {
+    background: $ink;
+    color: $paper;
+    border-color: $ink;
+
+    &:hover {
+      color: $paper;
+    }
+  }
+}
+
+.prefsInline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .prefsRow button {
+    padding: 10px;
+    font-size: $fs-sm;
+  }
+}
+
+// Бургер и мобильное меню
 .burger {
   display: none;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  place-items: center;
 
   @media (max-width: $bp-lg) {
-    display: block;
+    display: grid;
+  }
+}
+
+.burgerDot {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  display: grid;
+  place-items: center;
+  background: $ink;
+  color: $paper;
+  font-family: $font-mono;
+  font-size: 9px;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 65px;
+  left: 0;
+  right: 0;
+  height: calc(100dvh - 65px);
+  z-index: $z-header - 1;
+  background: $paper;
+  padding: $sp-lg $gutter;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-lg;
+  overflow-y: auto;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.25s ease, visibility 0s linear 0.25s;
+
+  @media (min-width: $bp-lg) {
+    display: none;
+  }
+}
+
+.mobileMenuOpen {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.25s ease;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-md;
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1.1;
+
+  a {
+    color: $ink;
+  }
+
+  .navActive {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+  }
+
+  .navAdmin {
+    width: fit-content;
+    font-size: $fs-sm;
+  }
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid $ink;
+}
+
+.mobileRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid $faint;
+  font-size: $fs-lg;
+  text-align: left;
+  width: 100%;
+
+  span {
+    flex: 1;
   }
 }
 
 .verifyBanner {
+  position: relative;
+  z-index: $z-header - 2;
   background: $ink;
   color: $paper;
   font-family: $font-mono;

@@ -1,0 +1,100 @@
+import type { FastifyInstance } from 'fastify';
+import type { News, SiteContent } from '@prisma/client';
+import {
+    CONTENT_KEYS,
+    contentUpdateSchema,
+    newsUpsertSchema,
+    type ContentKey,
+    type NewsDto,
+    type NewsUpsertInput,
+    type SiteContentDto,
+} from '@volkoff/shared';
+import { prisma } from '../db';
+import { notFound } from '../lib/errors';
+import { parse, requireAdmin } from '../plugins/auth';
+
+const toContentDto = (rows: SiteContent[]): SiteContentDto =>
+    Object.fromEntries(
+        rows.filter((r) => (CONTENT_KEYS as readonly string[]).includes(r.key)).map((r) => [r.key, { ru: r.ru, en: r.en }]),
+    );
+
+const toNewsDto = (n: News): NewsDto => ({
+    id: n.id,
+    title: { ru: n.titleRu, en: n.titleEn },
+    text: { ru: n.textRu, en: n.textEn },
+    imageUrl: n.imageUrl,
+    linkUrl: n.linkUrl,
+    linkLabel: { ru: n.linkLabelRu, en: n.linkLabelEn },
+    isActive: n.isActive,
+    sortOrder: n.sortOrder,
+    createdAt: n.createdAt.toISOString(),
+});
+
+const newsData = (input: NewsUpsertInput) => ({
+    titleRu: input.title.ru,
+    titleEn: input.title.en,
+    textRu: input.text.ru,
+    textEn: input.text.en,
+    imageUrl: input.imageUrl || null,
+    linkUrl: input.linkUrl || null,
+    linkLabelRu: input.linkLabel.ru,
+    linkLabelEn: input.linkLabel.en,
+    isActive: input.isActive,
+    sortOrder: input.sortOrder,
+});
+
+/** Публичное: тексты сайта и активные новости */
+export async function contentRoutes(app: FastifyInstance) {
+    app.get('/content', async () => toContentDto(await prisma.siteContent.findMany()));
+
+    app.get('/news', async () => {
+        const news = await prisma.news.findMany({
+            where: { isActive: true },
+            orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+            take: 10,
+        });
+        return news.map(toNewsDto);
+    });
+}
+
+/** Админка: редактирование текстов и новостей */
+export async function adminContentRoutes(app: FastifyInstance) {
+    app.addHook('preHandler', requireAdmin);
+
+    app.get('/content', async () => toContentDto(await prisma.siteContent.findMany()));
+
+    app.put('/content', async (req) => {
+        const input = parse(contentUpdateSchema, req.body);
+        const entries = Object.entries(input).filter(([, v]) => v) as [ContentKey, { ru: string; en: string }][];
+        await prisma.$transaction(
+            entries.map(([key, v]) =>
+                prisma.siteContent.upsert({ where: { key }, create: { key, ru: v.ru, en: v.en }, update: { ru: v.ru, en: v.en } }),
+            ),
+        );
+        return toContentDto(await prisma.siteContent.findMany());
+    });
+
+    app.get('/news', async () => {
+        const news = await prisma.news.findMany({ orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] });
+        return news.map(toNewsDto);
+    });
+
+    app.post('/news', async (req, reply) => {
+        const input = parse(newsUpsertSchema, req.body);
+        const news = await prisma.news.create({ data: newsData(input) });
+        reply.code(201);
+        return toNewsDto(news);
+    });
+
+    app.put<{ Params: { id: string } }>('/news/:id', async (req) => {
+        const input = parse(newsUpsertSchema, req.body);
+        const exists = await prisma.news.findUnique({ where: { id: req.params.id }, select: { id: true } });
+        if (!exists) throw notFound();
+        return toNewsDto(await prisma.news.update({ where: { id: req.params.id }, data: newsData(input) }));
+    });
+
+    app.delete<{ Params: { id: string } }>('/news/:id', async (req) => {
+        await prisma.news.delete({ where: { id: req.params.id } });
+        return { ok: true };
+    });
+}

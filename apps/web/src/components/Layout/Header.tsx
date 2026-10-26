@@ -1,29 +1,87 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X } from 'lucide-react';
+import { Menu, ShoppingCart, User, X } from 'lucide-react';
 import { getCartMood } from '@volkoff/shared';
 import { cartCount, cartTotal, useCart } from '@/store/cart';
 import { useAuth } from '@/store/auth';
 import { usePrefs } from '@/store/prefs';
 import Avatar from '../Avatar';
+import MoodFace from '../MoodFace';
 import styles from './Layout.module.scss';
 
+/** Язык и валюта — одна компактная кнопка с выпадашкой, чтобы не мусорить в шапке */
+const PrefsSwitch: React.FC<{ inline?: boolean }> = ({ inline }) => {
+    const { i18n } = useTranslation();
+    const { currency, setCurrency } = usePrefs();
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+    const lang = i18n.language.startsWith('en') ? 'en' : 'ru';
+
+    useEffect(() => {
+        if (!open) return;
+        const close = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+        document.addEventListener('mousedown', close);
+        return () => document.removeEventListener('mousedown', close);
+    }, [open]);
+
+    const options = (
+        <>
+            <div className={styles.prefsRow}>
+                {(['ru', 'en'] as const).map((l) => (
+                    <button key={l} className={lang === l ? styles.on : ''} onClick={() => i18n.changeLanguage(l)}>
+                        {l}
+                    </button>
+                ))}
+            </div>
+            <div className={styles.prefsRow}>
+                {(['RUB', 'USD'] as const).map((c) => (
+                    <button key={c} className={currency === c ? styles.on : ''} onClick={() => setCurrency(c)}>
+                        {c === 'RUB' ? '₽ rub' : '$ usd'}
+                    </button>
+                ))}
+            </div>
+        </>
+    );
+
+    if (inline) return <div className={styles.prefsInline}>{options}</div>;
+
+    return (
+        <div className={styles.prefs} ref={ref}>
+            <button className={styles.prefsBtn} onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+                {lang} · {currency === 'RUB' ? '₽' : '$'}
+            </button>
+            {open && <div className={styles.prefsPop}>{options}</div>}
+        </div>
+    );
+};
+
 const Header: React.FC = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const { pathname } = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const user = useAuth((s) => s.user);
-    const { currency, setCurrency } = usePrefs();
+    const currency = usePrefs((s) => s.currency);
     const lines = useCart((s) => s.lines);
     const bump = useCart((s) => s.bump);
-    const setOpen = useCart((s) => s.setOpen);
+    const setCartOpen = useCart((s) => s.setOpen);
 
     const count = cartCount(lines);
     const mood = getCartMood(cartTotal(lines, currency), currency);
+    const moodTitle = `${t('nav.cart')}: ${t(`cart.mood.${mood.key}`)}`;
     const [shake, setShake] = useState(false);
 
     useEffect(() => setMenuOpen(false), [pathname]);
+
+    // Пока открыто мобильное меню — страница под ним не скроллится
+    useEffect(() => {
+        if (!menuOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [menuOpen]);
 
     useEffect(() => {
         if (!bump) return;
@@ -32,76 +90,99 @@ const Header: React.FC = () => {
         return () => clearTimeout(id);
     }, [bump]);
 
-    const lang = i18n.language.startsWith('en') ? 'en' : 'ru';
+    const openCart = () => {
+        setMenuOpen(false);
+        setCartOpen(true);
+    };
+
+    const navLinks = (
+        <>
+            <NavLink to="/catalog" className={({ isActive }) => (isActive || pathname === '/' ? styles.navActive : '')}>
+                {t('nav.catalog')}
+            </NavLink>
+            <NavLink to="/about" className={({ isActive }) => (isActive ? styles.navActive : '')}>
+                {t('nav.about')}
+            </NavLink>
+            {user?.role === 'ADMIN' && (
+                <NavLink to="/admin" className={styles.navAdmin}>
+                    {t('nav.admin')}
+                </NavLink>
+            )}
+        </>
+    );
 
     return (
-        <header className={styles.header}>
-            <div className={`container ${styles.headerInner}`}>
-                <Link to="/" className={styles.logo} aria-label="VOLKOFF">
-                    VOLKOFF
-                </Link>
+        <>
+            <header className={styles.header}>
+                <div className={`container ${styles.headerInner}`}>
+                    <Link to="/" className={styles.logo} aria-label="VOLKOFF">
+                        VOLKOFF
+                    </Link>
 
-                <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
-                    <NavLink to="/catalog" className={({ isActive }) => (isActive || pathname === '/' ? styles.navActive : '')}>
-                        {t('nav.catalog')}
-                    </NavLink>
-                    <NavLink to="/about" className={({ isActive }) => (isActive ? styles.navActive : '')}>
-                        {t('nav.about')}
-                    </NavLink>
-                    {user?.role === 'ADMIN' && (
-                        <NavLink to="/admin" className={styles.navAdmin}>
-                            {t('nav.admin')}
-                        </NavLink>
-                    )}
-                    <div className={styles.switchers}>
-                        <button
-                            className={lang === 'ru' ? styles.on : ''}
-                            onClick={() => i18n.changeLanguage('ru')}
+                    <nav className={styles.nav}>{navLinks}</nav>
+
+                    <div className={styles.actions}>
+                        <PrefsSwitch />
+                        <Link
+                            to={user ? '/account' : '/login'}
+                            className={styles.iconBtn}
+                            title={user ? user.nickname : t('nav.login')}
+                            aria-label={user ? t('nav.account') : t('nav.login')}
                         >
-                            ru
-                        </button>
-                        <span>/</span>
+                            {user ? <Avatar seed={user.avatarSeed} size={24} /> : <User size={20} strokeWidth={1.5} />}
+                        </Link>
                         <button
-                            className={lang === 'en' ? styles.on : ''}
-                            onClick={() => i18n.changeLanguage('en')}
+                            className={`${styles.iconBtn} ${styles.cartBtn} ${shake ? styles.shake : ''}`}
+                            onClick={openCart}
+                            aria-label={`${t('nav.cart')} (${count})`}
+                            title={moodTitle}
                         >
-                            en
-                        </button>
-                        <span className={styles.sep} />
-                        <button className={currency === 'RUB' ? styles.on : ''} onClick={() => setCurrency('RUB')}>
-                            ₽
-                        </button>
-                        <span>/</span>
-                        <button className={currency === 'USD' ? styles.on : ''} onClick={() => setCurrency('USD')}>
-                            $
+                            <ShoppingCart size={20} strokeWidth={1.5} />
+                            {count > 0 && <span className={styles.cartCount}>{count}</span>}
+                            <span key={mood.key} className={styles.mood}>
+                                <MoodFace mood={mood.key} size={16} title={moodTitle} />
+                            </span>
                         </button>
                     </div>
-                </nav>
 
-                <div className={styles.actions}>
-                    {user ? (
-                        <Link to="/account" className={styles.account} title={user.nickname}>
-                            <Avatar seed={user.avatarSeed} size={28} />
-                            <span className={styles.nick}>{user.nickname}</span>
-                        </Link>
-                    ) : (
-                        <Link to="/login" className={styles.account}>
-                            {t('nav.login')}
-                        </Link>
-                    )}
-                    <button className={`${styles.cartBtn} ${shake ? styles.shake : ''}`} onClick={() => setOpen(true)}>
-                        {t('nav.cart')}
-                        <span className={`${styles.cartCount} ${count ? styles.cartCountOn : ''}`}>({count})</span>
-                        <span key={mood.emoji} className={styles.cartEmoji} title={t(`cart.mood.${mood.key}`)}>
-                            {mood.emoji}
-                        </span>
-                    </button>
-                    <button className={styles.burger} onClick={() => setMenuOpen((v) => !v)} aria-label={t('nav.menu')}>
-                        {menuOpen ? <X size={22} /> : <Menu size={22} />}
+                    <button
+                        className={styles.burger}
+                        onClick={() => setMenuOpen((v) => !v)}
+                        aria-label={t('nav.menu')}
+                        aria-expanded={menuOpen}
+                    >
+                        {count > 0 && !menuOpen && <span className={styles.burgerDot}>{count}</span>}
+                        {menuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
                     </button>
                 </div>
+            </header>
+
+            {/* Мобильное меню — отдельный оверлей на весь экран (не внутри header: у него backdrop-filter) */}
+            <div className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`} aria-hidden={!menuOpen}>
+                <nav className={styles.mobileNav}>{navLinks}</nav>
+                <div className={styles.mobileActions}>
+                    <Link to={user ? '/account' : '/login'} className={styles.mobileRow}>
+                        {user ? (
+                            <>
+                                <Avatar seed={user.avatarSeed} size={28} /> <span>{user.nickname}</span>
+                            </>
+                        ) : (
+                            <>
+                                <User size={22} strokeWidth={1.5} /> <span>{t('nav.login')}</span>
+                            </>
+                        )}
+                    </Link>
+                    <button className={styles.mobileRow} onClick={openCart}>
+                        <ShoppingCart size={22} strokeWidth={1.5} />
+                        <span>
+                            {t('nav.cart')} ({count})
+                        </span>
+                        <MoodFace mood={mood.key} size={20} title={moodTitle} />
+                    </button>
+                </div>
+                <PrefsSwitch inline />
             </div>
-        </header>
+        </>
     );
 };
 

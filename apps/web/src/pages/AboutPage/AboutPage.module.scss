@@ -2,13 +2,17 @@
   padding-top: $sp-lg;
 }
 
+// Слово вписывается в ширину контейнера и не вылезает за свой блок
 .huge {
   font-family: $font-display;
   font-weight: 400;
-  font-size: clamp(4rem, 18vw, 16rem);
-  line-height: 0.85;
+  font-size: min(15vw, 12rem);
+  line-height: 1;
+  // у Norway высокие выносные элементы — место сверху, чтобы буквы не залезали под шапку
+  padding-top: 0.3em;
   margin: 0 0 $sp-lg;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .grid {
@@ -23,6 +27,7 @@
 }
 
 .lead {
+  white-space: pre-line;
   font-size: clamp(1.4rem, 2.6vw, 2.2rem);
   line-height: 1.2;
   font-weight: 600;
@@ -34,6 +39,7 @@
 
   p {
     margin: 0 0 $sp-md;
+    white-space: pre-line;
   }
 }
 

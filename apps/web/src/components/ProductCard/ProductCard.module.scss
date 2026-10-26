@@ -218,9 +218,30 @@
   }
 }
 
-// ---- big: крупно, с описанием ----
+// ---- big: крупно, с описанием. Все карточки ряда одной высоты ----
 .big {
   gap: 1rem;
+  height: 100%;
+
+  .desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    // место под 4 строки, даже если описание короче или его нет
+    min-height: calc(4 * 1.6em);
+  }
+
+  .tags {
+    min-height: 1.4em;
+    max-height: 1.4em;
+    overflow: hidden;
+  }
+
+  // кнопка всегда прижата к низу карточки
+  > :global(.btn) {
+    margin-top: auto;
+  }
 
   .media {
     aspect-ratio: 1 / 1;

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Minus, Plus, X } from 'lucide-react';
 import { getCartMood } from '@volkoff/shared';
 import { cartCount, cartTotal, lineTotal, useCart } from '@/store/cart';
+import MoodFace from '../MoodFace';
 import { useFmt } from '@/lib/format';
 import styles from './CartDrawer.module.scss';
 
@@ -60,13 +61,13 @@ const CartDrawer: React.FC = () => {
 
                         <div className={styles.mood}>
                             <motion.span
-                                key={mood.emoji}
+                                key={mood.key}
                                 className={styles.moodEmoji}
                                 initial={{ scale: 0.2, rotate: -40 }}
                                 animate={{ scale: 1, rotate: 0 }}
                                 transition={{ type: 'spring', damping: 8, stiffness: 300 }}
                             >
-                                {mood.emoji}
+                                <MoodFace mood={mood.key} size={44} />
                             </motion.span>
                             <span className={styles.moodText}>
                                 {t('cart.title')}: {t(`cart.mood.${mood.key}`)}
