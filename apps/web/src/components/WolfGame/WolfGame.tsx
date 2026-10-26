@@ -10,7 +10,10 @@ const TEXT = {
     ru: {
         intro: 'бля, они хотят поймать меня и заставить выступать в цирке. но волки в цирке не выступают.',
         start: 'пробел / тап — бежать',
-        hint: '↑ пробел тап — прыжок · ↓ свайп вниз — пригнуться · × — выйти',
+        hint: '↑ пробел клик — прыжок · ↓ — пригнуться · × — выйти',
+        hintTouch: 'тап по полю или ▲ — прыжок · держи ▼ — присесть · × — выйти',
+        jump: 'прыжок',
+        duck: 'присесть',
         best: 'рекорд',
         again: 'ещё раз — пробел / тап',
         quips: ['свобода пахнет болотом', 'клоуны, отстаньте', 'ни одного трюка, ребята', 'обруч себе засуньте', 'я в коже, а не в трико', 'дрессировщик, ты устал'],
@@ -19,7 +22,10 @@ const TEXT = {
     en: {
         intro: "damn, they want to catch me and make me perform in the circus. but wolves don't do circus.",
         start: 'space / tap — run',
-        hint: '↑ space tap — jump · ↓ swipe down — duck · × — quit',
+        hint: '↑ space click — jump · ↓ — duck · × — quit',
+        hintTouch: 'tap the field or ▲ — jump · hold ▼ — duck · × — quit',
+        jump: 'jump',
+        duck: 'duck',
         best: 'best',
         again: 'again — space / tap',
         quips: ['freedom smells like swamp', 'clowns, back off', 'no tricks, guys', 'keep your hoop', "i wear leather, not tights", 'tired, trainer?'],
@@ -121,23 +127,21 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onClose]);
 
-    // Тач: тап — прыжок, свайп вниз — пригнуться
-    const touchY = useRef<number | null>(null);
+    // Тач: тап по полю — прыжок; на сенсорных экранах ещё кнопки «прыжок» и «присесть» (держать)
+    const [touchUI] = useState(() => window.matchMedia('(pointer: coarse)').matches);
     // после тача браузер шлёт ещё и «мышиный» mousedown — его игнорируем, иначе двойной прыжок
     const lastTouch = useRef(0);
-    const onTouchStart = (e: React.TouchEvent) => {
+    const onTouchStart = () => {
         lastTouch.current = performance.now();
-        touchY.current = e.touches[0].clientY;
         action();
     };
-    const onTouchMove = (e: React.TouchEvent) => {
-        if (touchY.current !== null && e.touches[0].clientY - touchY.current > 24) game.current?.duck(true);
-    };
     const onTouchEnd = () => {
-        touchY.current = null;
         lastTouch.current = performance.now();
         game.current?.jump(false);
-        game.current?.duck(false);
+    };
+    const duck = (on: boolean) => {
+        lastTouch.current = performance.now();
+        game.current?.duck(on);
     };
 
     const pad = (n: number) => String(n).padStart(5, '0');
@@ -172,7 +176,6 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     }}
                     onMouseUp={() => game.current?.jump(false)}
                     onTouchStart={onTouchStart}
-                    onTouchMove={onTouchMove}
                     onTouchEnd={onTouchEnd}
                 >
                     <canvas ref={canvasRef} className={styles.canvas} style={{ aspectRatio: `${width} / ${H}` }} />
@@ -196,7 +199,30 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     )}
                 </div>
 
-                <footer className={styles.hint}>{tx.hint}</footer>
+                {touchUI && (
+                    <div className={styles.pad} onContextMenu={(e) => e.preventDefault()}>
+                        <button
+                            className={styles.padBtn}
+                            onTouchStart={onTouchStart}
+                            onTouchEnd={onTouchEnd}
+                            onTouchCancel={onTouchEnd}
+                            aria-label={tx.jump}
+                        >
+                            ▲ {tx.jump}
+                        </button>
+                        <button
+                            className={styles.padBtn}
+                            onTouchStart={() => duck(true)}
+                            onTouchEnd={() => duck(false)}
+                            onTouchCancel={() => duck(false)}
+                            aria-label={tx.duck}
+                        >
+                            ▼ {tx.duck}
+                        </button>
+                    </div>
+                )}
+
+                <footer className={styles.hint}>{touchUI ? tx.hintTouch : tx.hint}</footer>
             </div>
         </div>
     );

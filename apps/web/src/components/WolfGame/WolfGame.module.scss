@@ -184,6 +184,38 @@
   animation: blink 1s steps(2) infinite;
 }
 
+// Кнопки для телефона: большие, на всю ширину, жмутся большими пальцами
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+
+.padBtn {
+  height: 64px;
+  border: 2px solid currentColor;
+  font-family: $font-mono;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: $ink;
+    color: $paper;
+  }
+
+  .night &:active {
+    background: $paper;
+    color: $ink;
+  }
+}
+
 .hint {
   padding: 8px 12px;
   border-top: 1px solid rgba($ink, 0.15);
