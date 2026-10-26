@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronDown, Dices, LayoutGrid, Rows3, X } from 'lucide-react';
 import { useCategories, useFacets, useProducts } from '@/api/queries';
 import ProductCard from '@/components/ProductCard/ProductCard';
-import NewsSlider from '@/components/NewsSlider/NewsSlider';
+import NewsStrip from '@/components/NewsStrip/NewsStrip';
 import Hero from '@/components/Hero/Hero';
 import { useFmt, useSiteText } from '@/lib/format';
 import { usePrefs } from '@/store/prefs';
@@ -98,7 +98,7 @@ const CatalogPage: React.FC = () => {
     return (
         <div className={`container ${styles.page}`}>
             <Hero />
-            <NewsSlider />
+            <NewsStrip />
             <header className={styles.hero}>
                 <h1 className={styles.bigWord}>
                     {t('catalog.title')}

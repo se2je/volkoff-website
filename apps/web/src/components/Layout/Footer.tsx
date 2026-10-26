@@ -21,6 +21,7 @@ const Footer: React.FC = () => {
                         <h4>{t('footer.shop')}</h4>
                         <Link to="/catalog">{t('nav.catalog')}</Link>
                         <Link to="/about">{t('nav.about')}</Link>
+                        <Link to="/news">{t('news.title')}</Link>
                         <Link to="/account">{t('nav.account')}</Link>
                     </div>
                     <div>

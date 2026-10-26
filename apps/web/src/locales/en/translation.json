@@ -211,6 +211,14 @@
     "text": "We only use essential cookies: login session, cart and language. No ad tracking.",
     "ok": "ok"
   },
+  "news": {
+    "label": "news",
+    "look": "see",
+    "all": "all news",
+    "title": "news",
+    "empty": "quiet for now. the wolf is saving up.",
+    "notFound": "no such news. or not anymore."
+  },
   "notFound": {
     "title": "404",
     "text": "nothing here. just like the point of fast fashion.",

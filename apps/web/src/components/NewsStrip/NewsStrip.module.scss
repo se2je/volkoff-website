@@ -1,0 +1,108 @@
+// Одна строка в моноширинном: [новости] 26.10 ЗАГОЛОВОК смотреть →      все³
+.strip {
+  display: flex;
+  align-items: center;
+  gap: $sp-md;
+  height: 34px;
+  margin-bottom: $sp-md;
+  border-top: 1px solid $ink;
+  border-bottom: 1px solid $ink;
+  font-family: $font-mono;
+  font-size: 11px;
+  overflow: hidden;
+}
+
+.tag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 7px;
+  background: $ink;
+  color: $paper;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+
+  // пиксель-«эфир» — как у плашки новинки
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: $paper;
+    animation: blink 1s steps(2) infinite;
+  }
+}
+
+.item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: $sp-sm;
+  animation: typeIn 0.5s steps(8) both;
+
+  &:hover .title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.date {
+  flex: none;
+  color: $muted;
+}
+
+.title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.more {
+  flex: none;
+  color: $muted;
+
+  @media (max-width: $bp-sm) {
+    display: none;
+  }
+}
+
+.all {
+  flex: none;
+  color: $muted;
+
+  &:hover {
+    color: $ink;
+  }
+
+  sup {
+    margin-left: 2px;
+    font-size: 8px;
+  }
+}
+
+@keyframes typeIn {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .tag::before {
+    animation: none;
+  }
+}
