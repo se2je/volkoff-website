@@ -101,8 +101,12 @@ main {
 .container {
   width: 100%;
   max-width: $container;
-  margin: 0 auto;
-  padding: 0 $gutter;
+  // только по бокам: глобальные стили грузятся после модулей, и шорткат «padding: 0 …»
+  // обнулял вертикальные отступы страниц — контент прилипал к ленте
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $gutter;
+  padding-right: $gutter;
 }
 
 .mono {
