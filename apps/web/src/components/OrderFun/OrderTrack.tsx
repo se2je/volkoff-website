@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { RUN_A, RUN_B } from '../WolfGame/engine';
+import { RUN_A, RUN_B } from '@/lib/wolfGrid';
 import PixelSprite from './PixelSprite';
 import styles from './OrderFun.module.scss';
 

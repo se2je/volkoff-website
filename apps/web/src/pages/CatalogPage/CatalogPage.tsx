@@ -6,6 +6,7 @@ import { useCategories, useFacets, useProducts } from '@/api/queries';
 import ProductCard from '@/components/ProductCard/ProductCard';
 import NewsStrip from '@/components/NewsStrip/NewsStrip';
 import Hero from '@/components/Hero/Hero';
+import LostWolf from '@/components/LostWolf';
 import { useFmt, useSiteText } from '@/lib/format';
 import { usePrefs } from '@/store/prefs';
 import styles from './CatalogPage.module.scss';
@@ -234,7 +235,7 @@ const CatalogPage: React.FC = () => {
                 <div className="spinner">{t('common.loading')}</div>
             ) : products?.length === 0 ? (
                 <div className={styles.empty}>
-                    <span>😡</span>
+                    <LostWolf />
                     <p>{t('catalog.empty')}</p>
                     <button className="btn btn--ghost" onClick={() => setParams({}, { replace: true })}>
                         {t('catalog.reset')}

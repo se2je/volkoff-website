@@ -1,0 +1,55 @@
+.lost {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: $ink;
+}
+
+// крутит головой туда-сюда, рывками — как кадры в игре
+.wolf {
+  animation: lookAround 2.4s steps(1) infinite, sniff 0.6s steps(2) infinite;
+}
+
+.question {
+  animation: blink 1s steps(2) infinite;
+  margin-left: 40px;
+}
+
+.ground {
+  width: 140px;
+  height: 2px;
+  margin-top: -6px;
+  background: repeating-linear-gradient(90deg, $ink 0 8px, transparent 8px 16px);
+}
+
+@keyframes lookAround {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(-1);
+  }
+}
+
+// голова чуть вниз-вверх — нюхает
+@keyframes sniff {
+  50% {
+    translate: 0 2px;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wolf,
+  .question {
+    animation: none;
+  }
+}
