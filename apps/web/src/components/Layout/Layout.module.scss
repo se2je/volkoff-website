@@ -148,6 +148,9 @@
   letter-spacing: 0.06em;
   line-height: 1;
   user-select: none;
+  // без этого 5 быстрых тапов на телефоне превращаются в зум страницы
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 
   // волк подпрыгивает на каждый клик — намёк, что его можно «долбить»
   &:active svg {
@@ -500,6 +503,8 @@
   font-size: $fs-huge;
   line-height: 0.9;
   user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   cursor: default;
 }
 

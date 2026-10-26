@@ -121,7 +121,10 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     // Тач: тап — прыжок, свайп вниз — пригнуться
     const touchY = useRef<number | null>(null);
+    // после тача браузер шлёт ещё и «мышиный» mousedown — его игнорируем, иначе двойной прыжок
+    const lastTouch = useRef(0);
     const onTouchStart = (e: React.TouchEvent) => {
+        lastTouch.current = performance.now();
         touchY.current = e.touches[0].clientY;
         action();
     };
@@ -130,6 +133,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     };
     const onTouchEnd = () => {
         touchY.current = null;
+        lastTouch.current = performance.now();
         game.current?.jump(false);
         game.current?.duck(false);
     };
@@ -158,9 +162,10 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
                 <div
                     className={styles.stage}
+                    onContextMenu={(e) => e.preventDefault()}
                     onMouseDown={(e) => {
                         e.preventDefault();
-                        action();
+                        if (performance.now() - lastTouch.current > 800) action();
                     }}
                     onMouseUp={() => game.current?.jump(false)}
                     onTouchStart={onTouchStart}

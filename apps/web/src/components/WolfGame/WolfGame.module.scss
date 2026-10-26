@@ -59,6 +59,8 @@
   position: relative;
   cursor: pointer;
   touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 .canvas {
