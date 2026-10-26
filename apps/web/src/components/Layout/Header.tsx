@@ -6,6 +6,7 @@ import { cartCount, cartTotal, useCart } from '@/store/cart';
 import { useAuth } from '@/store/auth';
 import { usePrefs } from '@/store/prefs';
 import { useCartMood } from '@/lib/format';
+import { burstFromEvent, useTapCombo } from '@/lib/wolfFun';
 import Avatar from '../Avatar';
 import MoodFace from '../MoodFace';
 import WolfMark from '../WolfMark';
@@ -61,6 +62,7 @@ const Header: React.FC = () => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
+    const onLogoTap = useTapCombo(burstFromEvent);
     const user = useAuth((s) => s.user);
     const currency = usePrefs((s) => s.currency);
     const lines = useCart((s) => s.lines);
@@ -116,7 +118,7 @@ const Header: React.FC = () => {
         <>
             <header className={styles.header}>
                 <div className={`container ${styles.headerInner}`}>
-                    <Link to="/" className={styles.logo} aria-label="VOLKOFF">
+                    <Link to="/" className={styles.logo} aria-label="VOLKOFF" onClick={onLogoTap}>
                         <WolfMark size={26} className={styles.logoMark} />
                         <span>VOLKOFF</span>
                     </Link>

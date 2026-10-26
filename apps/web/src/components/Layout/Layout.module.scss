@@ -147,6 +147,12 @@
   font-size: 2rem;
   letter-spacing: 0.06em;
   line-height: 1;
+  user-select: none;
+
+  // волк подпрыгивает на каждый клик — намёк, что его можно «долбить»
+  &:active svg {
+    transform: translateY(-3px);
+  }
 
   span {
     transition: letter-spacing 0.3s;
@@ -475,6 +481,8 @@
   background: $ink;
   color: $paper;
   padding: $sp-xl 0 $sp-md;
+  // огромный шрифт логотипа даёт невидимый «хвост» строки ниже футера — он и давал белую полосу внизу
+  overflow: hidden;
 }
 
 .footerInner {
@@ -491,6 +499,8 @@
   font-family: $font-display;
   font-size: $fs-huge;
   line-height: 0.9;
+  user-select: none;
+  cursor: default;
 }
 
 .footerMark {

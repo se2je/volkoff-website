@@ -1,0 +1,58 @@
+.page {
+  padding: 6rem 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.08em;
+  font-family: Norway, sans-serif;
+  font-size: clamp(6rem, 20vw, 14rem);
+  line-height: 0.9;
+  user-select: none;
+}
+
+.wolf {
+  display: block;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+// размер в em, чтобы волк был ростом с цифры
+.mark {
+  width: 0.72em !important;
+  height: 0.72em !important;
+  flex-basis: 0.72em !important;
+  font-size: inherit;
+  animation: twitch 2.4s steps(1) infinite;
+
+  .wolf:active & {
+    transform: scale(0.9);
+  }
+}
+
+// пиксельный «глитч»: волк редко дёргается на пару пикселей
+@keyframes twitch {
+  0%, 86%, 100% { transform: translate(0, 0); }
+  88% { transform: translate(-4px, 0); }
+  90% { transform: translate(4px, -2px); }
+  92% { transform: translate(0, 2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark { animation: none; }
+}
+
+.hint {
+  font-size: $fs-sm;
+  margin-bottom: 1rem;
+}

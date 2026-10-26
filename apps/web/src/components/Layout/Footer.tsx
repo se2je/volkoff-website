@@ -2,15 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CONTACTS } from '@/config/site';
+import { burstFromEvent, useTapCombo } from '@/lib/wolfFun';
 import WolfMark from '../WolfMark';
 import styles from './Layout.module.scss';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
+    const onLogoTap = useTapCombo(burstFromEvent);
     return (
         <footer className={styles.footer}>
             <div className={`container ${styles.footerInner}`}>
-                <div className={styles.footerLogo}>
+                <div className={styles.footerLogo} onClick={onLogoTap}>
                     <WolfMark size={64} className={styles.footerMark} />
                     VOLKOFF<span className={styles.cursor}>_</span>
                 </div>

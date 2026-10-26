@@ -1,9 +1,7 @@
 import React from 'react';
+import { WOLF_PATH as PATH } from '@/lib/wolfFun';
 
 // Знак VOLKOFF — пиксельный волк 9×9 (тот же, что в brand/wolf и фавиконках)
-const WOLF = ['#_______#', '##_____##', '#########', '##_###_##', '#########', '_#######_', '__#####__', '___###___', '____#____'];
-
-const PATH = WOLF.flatMap((row, y) => [...row].map((c, x) => (c === '#' ? `M${x} ${y}h1v1h-1z` : ''))).join('');
 
 const WolfMark: React.FC<{ size?: number; className?: string }> = ({ size = 24, className }) => (
     <svg
