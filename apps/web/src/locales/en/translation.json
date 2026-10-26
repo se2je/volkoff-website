@@ -193,8 +193,8 @@
     "items": "items",
     "delivery": "delivery",
     "paidThanks": "payment received. thank you, you're the best 🖤",
-    "playWait": "parcels take a while. a jetpack wolf will help you wait",
-    "playBtn": "play while you wait"
+    "playWait": "parcels take a while, but the jetpack wolf is doing his best",
+    "playBtn": "walk in his fur"
   },
   "receipt": {
     "total": "total",
