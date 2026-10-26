@@ -35,19 +35,19 @@ const CategoryRow: React.FC<{ initial: Draft; onDone: () => void }> = ({ initial
     };
     return (
         <tr>
-            <td>
+            <td data-label="slug (в URL, латиница)" className={styles.wide}>
                 <input className="input" placeholder="slug-latin" value={d.slug} onChange={(e) => setD({ ...d, slug: e.target.value })} />
             </td>
-            <td>
+            <td data-label="🇷🇺 название">
                 <input className="input" placeholder="название" value={d.ru} onChange={(e) => setD({ ...d, ru: e.target.value })} />
             </td>
-            <td>
+            <td data-label="🇬🇧 name">
                 <input className="input" placeholder="name" value={d.en} onChange={(e) => setD({ ...d, en: e.target.value })} />
             </td>
-            <td style={{ width: 90 }}>
+            <td style={{ width: 90 }} data-label="порядок">
                 <input className="input" type="number" value={d.sortOrder} onChange={(e) => setD({ ...d, sortOrder: Number(e.target.value) })} />
             </td>
-            <td style={{ whiteSpace: 'nowrap' }}>
+            <td style={{ whiteSpace: 'nowrap' }} className={styles.catActions}>
                 <button className="btn btn--sm" onClick={save}>
                     {d.id ? 'сохранить' : '+ добавить'}
                 </button>{' '}
@@ -73,7 +73,7 @@ const Categories: React.FC = () => {
         <>
             <h1 className={styles.title}>категории</h1>
             <div className={styles.tableWrap}>
-                <table className={styles.table}>
+                <table className={`${styles.table} ${styles.stackTable}`}>
                     <thead>
                         <tr>
                             <th>slug (в URL)</th>

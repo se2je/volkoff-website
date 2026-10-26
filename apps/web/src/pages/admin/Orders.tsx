@@ -46,18 +46,18 @@ const OrderRow: React.FC<{ order: OrderDto }> = ({ order }) => {
     return (
         <>
             <tr className={styles.clickRow} onClick={() => setOpen((v) => !v)}>
-                <td className="mono">#{order.number}</td>
-                <td>
+                <td className="mono" data-label="№">#{order.number}</td>
+                <td data-label="покупатель">
                     {order.user && (
                         <span className={styles.userCell}>
                             <Avatar seed={order.user.avatarSeed} size={22} /> {order.user.nickname}
                         </span>
                     )}
                 </td>
-                <td className="mono">{new Date(order.createdAt).toLocaleString('ru-RU')}</td>
-                <td className="mono">{formatMoney(order.total, order.currency)}</td>
-                <td className="mono">{order.paymentMethod}</td>
-                <td>
+                <td className="mono" data-label="дата">{new Date(order.createdAt).toLocaleString('ru-RU')}</td>
+                <td className="mono" data-label="сумма">{formatMoney(order.total, order.currency)}</td>
+                <td className="mono" data-label="оплата">{order.paymentMethod}</td>
+                <td data-label="статус">
                     <span className={`${styles.pill} ${styles[`ord_${order.status}`]}`}>{STATUS_LABEL[order.status]}</span>
                 </td>
             </tr>
@@ -167,7 +167,7 @@ const Orders: React.FC = () => {
                 <p className="mono muted">пусто</p>
             ) : (
                 <div className={styles.tableWrap}>
-                    <table className={styles.table}>
+                    <table className={`${styles.table} ${styles.stackTable}`}>
                         <thead>
                             <tr>
                                 <th>№</th>

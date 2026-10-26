@@ -38,7 +38,7 @@ const Users: React.FC = () => {
                 <input className="input" placeholder="почта или ник" value={q} onChange={(e) => setQ(e.target.value)} />
             </div>
             <div className={styles.tableWrap}>
-                <table className={styles.table}>
+                <table className={`${styles.table} ${styles.stackTable}`}>
                     <thead>
                         <tr>
                             <th>ник</th>
@@ -52,16 +52,16 @@ const Users: React.FC = () => {
                     <tbody>
                         {data?.map((u) => (
                             <tr key={u.id}>
-                                <td>
+                                <td data-label="ник" className={styles.wide}>
                                     <span className={styles.userCell}>
                                         <Avatar seed={u.avatarSeed} size={24} /> {u.nickname}
                                     </span>
                                 </td>
-                                <td className="mono">{u.email}</td>
-                                <td>{u.emailVerified ? '✓' : <span className={styles.red}>✗</span>}</td>
-                                <td className="mono">{u.orderCount}</td>
-                                <td className="mono">{new Date(u.createdAt).toLocaleDateString('ru-RU')}</td>
-                                <td>
+                                <td className={`mono ${styles.wide}`} data-label="почта">{u.email}</td>
+                                <td data-label="подтверждена">{u.emailVerified ? '✓' : <span className={styles.red}>✗</span>}</td>
+                                <td className="mono" data-label="заказов">{u.orderCount}</td>
+                                <td className="mono" data-label="с нами с">{new Date(u.createdAt).toLocaleDateString('ru-RU')}</td>
+                                <td data-label="роль">
                                     <button
                                         className={`btn btn--sm ${u.role === 'ADMIN' ? 'btn--acid' : 'btn--ghost'}`}
                                         disabled={u.id === me?.id}

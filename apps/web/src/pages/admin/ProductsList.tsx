@@ -42,7 +42,39 @@ const ProductsList: React.FC = () => {
             {!data ? (
                 <div className="spinner">…</div>
             ) : (
-                <div className={styles.tableWrap}>
+                <>
+                {/* На телефоне — карточки вместо таблицы */}
+                <ul className={styles.mobileList}>
+                    {list.map((p) => (
+                        <li key={p.id}>
+                            <Link to={`/admin/products/${p.id}`} className={styles.mobileItem}>
+                                {p.images[0] ? <img src={p.images[0].url} alt="" /> : <span className={styles.noThumb} />}
+                                <div className={styles.mobileItemBody}>
+                                    <div className={styles.mobileItemTop}>
+                                        <span className="mono muted">{p.code}</span>
+                                        <span className={`${styles.pill} ${styles[`pill_${p.status}`]}`}>{PRODUCT_STATUS_LABEL[p.status]}</span>
+                                    </div>
+                                    <b>
+                                        {p.name.ru}
+                                        {p.isFeatured && <span className={styles.badge}>★</span>}
+                                    </b>
+                                    <span className="mono">
+                                        {formatMoney(p.priceRub, 'RUB')} · {formatMoney(p.priceUsd, 'USD', 'en')}
+                                    </span>
+                                    <span className="mono muted">
+                                        {p.category?.name.ru ?? '—'} ·{' '}
+                                        {p.variants.map((v) => (
+                                            <span key={v.id} className={v.stock === 0 ? styles.red : ''}>
+                                                {v.size}:{v.stock}{' '}
+                                            </span>
+                                        ))}
+                                    </span>
+                                </div>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+                <div className={`${styles.tableWrap} ${styles.desktopOnly}`}>
                     <table className={styles.table}>
                         <thead>
                             <tr>
@@ -85,6 +117,7 @@ const ProductsList: React.FC = () => {
                         </tbody>
                     </table>
                 </div>
+                </>
             )}
         </>
     );

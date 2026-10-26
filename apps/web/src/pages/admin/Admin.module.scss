@@ -21,16 +21,22 @@
   height: 100vh;
 
   @media (max-width: $bp-md) {
-    position: static;
+    position: sticky;
+    z-index: 10;
     height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'logo back'
+      'nav nav';
     align-items: center;
-    gap: $sp-md;
+    gap: $sp-sm $sp-md;
+    padding: $sp-sm $sp-md;
   }
 }
 
 .logo {
+  grid-area: logo;
   font-family: $font-display;
   font-size: 1.6rem;
   line-height: 1;
@@ -72,8 +78,17 @@
   }
 
   @media (max-width: $bp-md) {
+    grid-area: nav;
     flex-direction: row;
-    flex-wrap: wrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin: 0 (-$sp-md);
+    padding: 0 $sp-md;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
@@ -92,6 +107,8 @@
 }
 
 .toSite {
+  grid-area: back;
+  justify-self: end;
   font-family: $font-mono;
   font-size: $fs-xs;
   color: rgba($paper, 0.6);
@@ -104,6 +121,10 @@
 .main {
   padding: $sp-lg clamp(16px, 3vw, 40px);
   min-width: 0;
+
+  @media (max-width: $bp-md) {
+    padding-top: $sp-md;
+  }
 }
 
 .title {
@@ -130,6 +151,7 @@
   display: flex;
   gap: $sp-sm;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .h2 {
@@ -229,6 +251,11 @@
     width: auto;
     min-width: 220px;
     background: $paper;
+
+    @media (max-width: $bp-md) {
+      width: 100%;
+      min-width: 0;
+    }
   }
 }
 
@@ -565,5 +592,149 @@
   input {
     width: 70px;
     padding: 0.4em 0.6em;
+  }
+}
+
+// ---------- товары на телефоне: карточки вместо таблицы ----------
+.desktopOnly {
+  @media (max-width: $bp-md) {
+    display: none;
+  }
+}
+
+.mobileList {
+  display: none;
+  flex-direction: column;
+  gap: $sp-sm;
+
+  @media (max-width: $bp-md) {
+    display: flex;
+  }
+}
+
+.mobileItem {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: $sp-md;
+  padding: $sp-sm;
+  background: $paper;
+  border: 1px solid $ink;
+
+  img,
+  .noThumb {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    background: $paper;
+  }
+
+  .noThumb {
+    display: block;
+    background: repeating-linear-gradient(45deg, $paper 0 6px, $bone 6px 12px);
+  }
+
+  &:active {
+    background: $bone;
+  }
+}
+
+.mobileItemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: $fs-sm;
+
+  b {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mono {
+    font-size: $fs-xs;
+  }
+}
+
+.mobileItemTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $sp-sm;
+}
+
+// ---------- таблицы на телефоне: каждая строка — карточка с подписями ----------
+.stackTable {
+  @media (max-width: $bp-md) {
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tr {
+      display: block;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $sp-sm $sp-md;
+      padding: $sp-md;
+      border-bottom: 1px solid $ink;
+    }
+
+    td {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0;
+      border: 0;
+      min-width: 0;
+      width: auto !important;
+
+      // подпись поля из data-label
+      &[data-label]::before {
+        content: attr(data-label);
+        font-family: $font-mono;
+        font-size: 10px;
+        color: $muted;
+      }
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    // раскрытая строка заказа — на всю ширину
+    .expand > td {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// Новости в админке на телефоне — фото не на весь экран
+.newsImage {
+  @media (max-width: $bp-md) {
+    max-width: 200px;
+  }
+}
+
+.catActions {
+  @media (max-width: $bp-md) {
+    grid-column: 1 / -1;
+    flex-direction: row !important;
+    gap: $sp-sm !important;
+
+    button:first-child {
+      flex: 1;
+    }
+  }
+}
+
+// Строка заказа на телефоне — без «прыжков» при наведении
+.clickRow td {
+  @media (max-width: $bp-md) {
+    cursor: pointer;
   }
 }
