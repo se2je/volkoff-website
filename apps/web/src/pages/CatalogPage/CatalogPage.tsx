@@ -9,7 +9,9 @@ import { useFmt, useSiteText } from '@/lib/format';
 import { usePrefs } from '@/store/prefs';
 import styles from './CatalogPage.module.scss';
 
-const SORTS = ['manual', 'new', 'price_asc', 'price_desc'] as const;
+// По умолчанию — новое сверху (по дате добавления)
+const SORTS = ['new', 'manual', 'price_asc', 'price_desc'] as const;
+const DEFAULT_SORT = 'new';
 
 const CatalogPage: React.FC = () => {
     const { t } = useTranslation();
@@ -21,13 +23,13 @@ const CatalogPage: React.FC = () => {
     const category = params.get('category') ?? undefined;
     const size = params.get('size') ?? undefined;
     const q = params.get('q') ?? '';
-    const sort = params.get('sort') ?? 'manual';
+    const sort = params.get('sort') ?? DEFAULT_SORT;
     const inStock = params.get('inStock') === '1';
     const min = params.get('min') ? Number(params.get('min')) : undefined;
     const max = params.get('max') ? Number(params.get('max')) : undefined;
 
     // Сколько «дополнительных» фильтров активно — показываем на кнопке «фильтры»
-    const activeFilters = [size, inStock || undefined, min, max, sort !== 'manual' ? sort : undefined].filter(Boolean).length;
+    const activeFilters = [size, inStock || undefined, min, max, sort !== DEFAULT_SORT ? sort : undefined].filter(Boolean).length;
     // Панель фильтров свёрнута; если пришли по ссылке с фильтрами — сразу открыта
     const [filtersOpen, setFiltersOpen] = useState(activeFilters > 0);
 
@@ -55,7 +57,7 @@ const CatalogPage: React.FC = () => {
     const { data: facets } = useFacets();
     const { data: products, isLoading, isFetching } = useProducts({ category, size, q, min, max, inStock, sort, currency });
 
-    const hasFilters = !!(category || size || q || inStock || min || max || sort !== 'manual');
+    const hasFilters = !!(category || size || q || inStock || min || max || sort !== DEFAULT_SORT);
     const symbol = currency === 'RUB' ? '₽' : '$';
 
     return (
@@ -168,7 +170,7 @@ const CatalogPage: React.FC = () => {
                         <button
                             key={s}
                             className={`tag-btn ${sort === s ? 'is-active' : ''}`}
-                            onClick={() => update({ sort: s === 'manual' ? undefined : s })}
+                            onClick={() => update({ sort: s === DEFAULT_SORT ? undefined : s })}
                         >
                             {t(`catalog.sort.${s}`)}
                         </button>

@@ -66,7 +66,7 @@ export const catalogQuerySchema = z.object({
         .enum(['1', '0', 'true', 'false'])
         .transform((v) => v === '1' || v === 'true')
         .optional(),
-    sort: z.enum(SORTS).default('manual'),
+    sort: z.enum(SORTS).default('new'),
 });
 export type CatalogQuery = z.infer<typeof catalogQuerySchema>;
 
