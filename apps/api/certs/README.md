@@ -31,7 +31,7 @@ Docker-образ API подхватывает файл `russian_trusted_ca.pem`
 2. Склеить их в один файл (с переводом строки между ними — у файлов с Госуслуг его в конце нет):
 
    ```bash
-   { cat russian_trusted_root_ca_pem.crt; echo; cat russian_trusted_sub_ca_pem.crt; echo; } | tr -d '' | sed '/^$/d' > apps/api/certs/russian_trusted_ca.pem
+   { cat russian_trusted_root_ca_pem.crt; echo; cat russian_trusted_sub_ca_pem.crt; echo; } | tr -d '\r' | sed '/^$/d' > apps/api/certs/russian_trusted_ca.pem
    ```
 
 3. Проверить, что ими действительно подтверждается сертификат Т-Кассы (должно быть `Verify return code: 0 (ok)`):
