@@ -65,3 +65,9 @@ export const compareSizes = (a: string, b: string): number => {
     if (!Number.isNaN(nb)) return 1;
     return a.localeCompare(b);
 };
+
+/** Сколько дней вещь считается новинкой после выхода */
+export const NEW_DAYS = 14;
+
+export const isNewProduct = (p: { releasedAt: string }, now = Date.now()): boolean =>
+    now - new Date(p.releasedAt).getTime() < NEW_DAYS * 86400_000;

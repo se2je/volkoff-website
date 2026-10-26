@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, LayoutGrid, Rows3, X } from 'lucide-react';
+import { ChevronDown, Dices, LayoutGrid, Rows3, X } from 'lucide-react';
 import { useCategories, useFacets, useProducts } from '@/api/queries';
 import ProductCard from '@/components/ProductCard/ProductCard';
 import NewsSlider from '@/components/NewsSlider/NewsSlider';
@@ -13,6 +13,19 @@ import styles from './CatalogPage.module.scss';
 // По умолчанию — новое сверху (по дате добавления)
 const SORTS = ['new', 'manual', 'price_asc', 'price_desc'] as const;
 const DEFAULT_SORT = 'new';
+
+// Сид случайного порядка «по вайбу» живёт до закрытия вкладки: назад из карточки — тот же порядок
+const VIBE_KEY = 'vk_vibe_seed';
+const newSeed = () => Math.random().toString(36).slice(2, 10);
+const readSeed = () => {
+    try {
+        const s = sessionStorage.getItem(VIBE_KEY) ?? newSeed();
+        sessionStorage.setItem(VIBE_KEY, s);
+        return s;
+    } catch {
+        return newSeed();
+    }
+};
 
 const CatalogPage: React.FC = () => {
     const { t } = useTranslation();
@@ -33,6 +46,17 @@ const CatalogPage: React.FC = () => {
     const activeFilters = [size, inStock || undefined, min, max, sort !== DEFAULT_SORT ? sort : undefined].filter(Boolean).length;
     // Панель фильтров свёрнута; если пришли по ссылке с фильтрами — сразу открыта
     const [filtersOpen, setFiltersOpen] = useState(activeFilters > 0);
+
+    const [vibeSeed, setVibeSeed] = useState(readSeed);
+    const reroll = () => {
+        const s = newSeed();
+        try {
+            sessionStorage.setItem(VIBE_KEY, s);
+        } catch {
+            /* приватный режим — живём без памяти */
+        }
+        setVibeSeed(s);
+    };
 
     const [search, setSearch] = useState(q);
     useEffect(() => setSearch(q), [q]);
@@ -56,7 +80,17 @@ const CatalogPage: React.FC = () => {
 
     const { data: categories } = useCategories();
     const { data: facets } = useFacets();
-    const { data: products, isLoading, isFetching } = useProducts({ category, size, q, min, max, inStock, sort, currency });
+    const { data: products, isLoading, isFetching } = useProducts({
+        category,
+        size,
+        q,
+        min,
+        max,
+        inStock,
+        sort,
+        seed: sort === 'manual' ? vibeSeed : undefined,
+        currency,
+    });
 
     const hasFilters = !!(category || size || q || inStock || min || max || sort !== DEFAULT_SORT);
     const symbol = currency === 'RUB' ? '₽' : '$';
@@ -172,9 +206,12 @@ const CatalogPage: React.FC = () => {
                         <button
                             key={s}
                             className={`tag-btn ${sort === s ? 'is-active' : ''}`}
-                            onClick={() => update({ sort: s === DEFAULT_SORT ? undefined : s })}
+                            // повторный клик по активному «по вайбу» — перемешать ещё раз
+                            onClick={() => (s === 'manual' && sort === 'manual' ? reroll() : update({ sort: s === DEFAULT_SORT ? undefined : s }))}
+                            title={s === 'manual' ? t('catalog.reroll') : undefined}
                         >
                             {t(`catalog.sort.${s}`)}
+                            {s === 'manual' && <Dices size={13} strokeWidth={1.5} style={{ marginLeft: 6, verticalAlign: '-2px' }} />}
                         </button>
                     ))}
                 </div>

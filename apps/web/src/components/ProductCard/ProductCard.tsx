@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import type { ProductDto } from '@volkoff/shared';
+import { isNewProduct, type ProductDto } from '@volkoff/shared';
 import { useFmt } from '@/lib/format';
 import { useCart } from '@/store/cart';
 import { toast } from '@/store/toast';
 import SizePicker from './SizePicker';
 import PriceTag from './PriceTag';
+import WolfMark from '../WolfMark';
 import styles from './ProductCard.module.scss';
 
 interface Props {
@@ -29,6 +30,8 @@ const ProductCard: React.FC<Props> = ({ product, variant = 'grid', index = 0, pr
     const hasBack = images.length > 1;
     const soldOut = !product.inStock;
     const totalStock = product.variants.reduce((n, v) => n + v.stock, 0);
+    const isNew = !soldOut && isNewProduct(product);
+    const lastOne = !soldOut && totalStock === 1;
     const href = preview ? undefined : `/product/${product.slug}`;
 
     const addToCart = (s: string) => {
@@ -48,6 +51,8 @@ const ProductCard: React.FC<Props> = ({ product, variant = 'grid', index = 0, pr
 
     const mediaInner = (
         <>
+            {/* новинка: тихие лучи крутятся за вещью (фото без фона, так что видно вокруг силуэта) */}
+            {isNew && <span className={styles.rays} aria-hidden="true" />}
             {shown ? (
                 <>
                     <img src={shown.url} alt={l(product.name)} loading={index < 8 ? 'eager' : 'lazy'} className={styles.img} />
@@ -60,7 +65,18 @@ const ProductCard: React.FC<Props> = ({ product, variant = 'grid', index = 0, pr
             )}
             <span className={styles.label}>{product.code}</span>
             {soldOut && <span className={styles.stamp}>{t('product.soldOut')}</span>}
-            {!soldOut && totalStock === 1 && <span className={styles.last}>{t('product.lastOne')}</span>}
+            {(isNew || product.isFeatured || lastOne) && (
+                <span className={styles.badges}>
+                    {isNew && <span className={`${styles.badge} ${styles.badgeNew}`}>{t('product.isNew')}</span>}
+                    {product.isFeatured && !soldOut && (
+                        <span className={`${styles.badge} ${styles.badgePick}`}>
+                            <WolfMark size={9} />
+                            {t('product.wolfPick')}
+                        </span>
+                    )}
+                    {lastOne && <span className={`${styles.badge} ${styles.badgeLast}`}>{t('product.lastOne')}</span>}
+                </span>
+            )}
         </>
     );
     const media = href ? (

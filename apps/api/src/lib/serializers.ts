@@ -46,6 +46,7 @@ export const toProductDto = (p: ProductFull): ProductDto => ({
     images: p.images.map((i) => ({ id: i.id, url: i.url, alt: i.alt })),
     variants: p.variants.map((v) => ({ id: v.id, size: v.size, stock: v.stock })),
     inStock: p.variants.some((v) => v.stock > 0),
+    releasedAt: p.releasedAt.toISOString(),
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
 });

@@ -31,6 +31,7 @@
       "price_asc": "дешевле",
       "price_desc": "дороже"
     },
+    "reroll": "перемешать ещё раз",
     "viewGrid": "сетка",
     "viewBig": "крупно",
     "reset": "сбросить",
@@ -46,6 +47,8 @@
   "product": {
     "soldOut": "распродано",
     "lastOne": "последняя",
+    "isNew": "новинка",
+    "wolfPick": "выбор волка",
     "size": "размер",
     "pickSize": "выбери размер",
     "addToCart": "в корзину",

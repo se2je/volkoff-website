@@ -78,13 +78,78 @@
   background: $paper;
 }
 
-.last {
+.badges {
   position: absolute;
   top: 8px;
   right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+// Плашки — моно-шрифт капсом, как артикулы и ценники
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: $font-mono;
   font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 7px;
+  border: 1px solid $ink;
+  background: $paper;
   color: $ink;
+}
+
+// Новинка — чёрная, с мигающим пиксельным квадратиком как курсор у логотипа
+.badgeNew {
+  background: $ink;
+  color: $paper;
+
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: $paper;
+    animation: blink 1s steps(2) infinite;
+  }
+}
+
+.badgePick svg {
+  flex: 0 0 9px !important;
+}
+
+.badgeLast {
+  border-style: dashed;
+}
+
+// Лучи за новинкой: еле заметные, медленно крутятся, к краям гаснут
+.rays {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: repeating-conic-gradient(from 0deg, rgba($ink, 0.045) 0deg 5deg, transparent 5deg 20deg);
+  mask-image: radial-gradient(circle, #000 15%, transparent 58%);
+  animation: rays 40s linear infinite;
+  pointer-events: none;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes rays {
+  to {
+    rotate: 360deg;
+  }
 }
 
 .isSoldOut .img {
@@ -253,5 +318,11 @@
 
   .priceTag {
     font-size: $fs-md;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
 }

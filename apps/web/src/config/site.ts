@@ -6,22 +6,8 @@ export const CONTACTS = {
     telegram: 'kisikovichXD_HD',
 };
 
-/**
- * Реквизиты продавца для юр. документов (подставляются в {{PLACEHOLDER}} в markdown).
- * ⚠️ Заполнить до запуска продаж! Пока не заполнено — на страницах документов видно «[заполнить: ...]».
- */
-export const LEGAL: Record<string, string> = {
-    SELLER_NAME: '',
-    SELLER_TYPE: '',
-    INN: '',
-    OGRNIP: '',
-    ADDRESS: '',
-    SITE_URL: 'https://volkoffmvs.com',
-    EFFECTIVE_DATE: '',
-    RKN_REGISTRY_NUMBER: '',
-    HOSTING_PROVIDER: '',
-    PAYMENT_PROVIDERS: '',
-};
+/** Адрес сайта для юр. документов; остальные реквизиты продавца — в админке («реквизиты») */
+export const SITE_URL = 'https://volkoffmvs.com';
 
 /** Сколько минут держим резерв неоплаченного заказа (должно совпадать с ORDER_RESERVATION_MINUTES на бэке) */
 export const RESERVATION_MINUTES = 30;

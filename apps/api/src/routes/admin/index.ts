@@ -59,6 +59,8 @@ const productData = (input: ProductUpsertInput) => ({
     status: input.status,
     isFeatured: input.isFeatured,
     sortOrder: input.sortOrder,
+    // полдень UTC — чтобы в любом часовом поясе дата читалась тем же днём
+    ...(input.releasedAt ? { releasedAt: new Date(`${input.releasedAt}T12:00:00Z`) } : {}),
 });
 
 /** Картинки пересоздаём в нужном порядке, варианты — апсертим по размеру (чтобы не терять ссылки из заказов). */

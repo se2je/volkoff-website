@@ -98,16 +98,39 @@ export const DEFAULT_HERO: Hero = {
     grayscale: false,
 };
 
+/** Реквизиты продавца — подставляются в {{КЛЮЧИ}} юр. документов. Пустое поле показывается как «[заполнить: …]». */
+export const LEGAL_FIELDS = [
+    { key: 'SELLER_TYPE', label: 'кто продаёт', hint: 'Индивидуальный предприниматель' },
+    { key: 'SELLER_NAME', label: 'ФИО / название', hint: 'Волков Марк Иванович' },
+    { key: 'INN', label: 'ИНН', hint: '12 цифр для ИП' },
+    { key: 'OGRNIP', label: 'ОГРНИП', hint: '15 цифр' },
+    { key: 'ADDRESS', label: 'адрес', hint: 'как в выписке ЕГРИП' },
+    { key: 'EFFECTIVE_DATE', label: 'дата редакции документов', hint: '26.10.2026' },
+    { key: 'RKN_REGISTRY_NUMBER', label: 'номер в реестре операторов ПДн (РКН)', hint: 'выдают после уведомления РКН' },
+    { key: 'HOSTING_PROVIDER', label: 'хостинг', hint: 'ООО «Таймвеб»' },
+    { key: 'PAYMENT_PROVIDERS', label: 'платёжные провайдеры', hint: 'АО «ТБанк» (Т-Касса)' },
+] as const;
+export type LegalKey = (typeof LEGAL_FIELDS)[number]['key'];
+
+export const legalSchema = z.object(
+    Object.fromEntries(LEGAL_FIELDS.map((f) => [f.key, z.string().trim().max(500)])) as Record<LegalKey, z.ZodString>,
+);
+export type LegalInfo = z.infer<typeof legalSchema>;
+
+export const DEFAULT_LEGAL = Object.fromEntries(LEGAL_FIELDS.map((f) => [f.key, ''])) as LegalInfo;
+
 export interface SiteSettingsDto {
     cartMoods: CartMoodLevel[];
     tagRail: TagRail;
     hero: Hero;
+    legal: LegalInfo;
 }
 
 export const SETTINGS_SCHEMAS = {
     cartMoods: cartMoodsSchema,
     tagRail: tagRailSchema,
     hero: heroSchema,
+    legal: legalSchema,
 } as const;
 export type SettingKey = keyof typeof SETTINGS_SCHEMAS;
 
@@ -115,4 +138,5 @@ export const DEFAULT_SETTINGS: SiteSettingsDto = {
     cartMoods: DEFAULT_CART_MOODS,
     tagRail: DEFAULT_TAG_RAIL,
     hero: DEFAULT_HERO,
+    legal: DEFAULT_LEGAL,
 };

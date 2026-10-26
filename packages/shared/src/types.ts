@@ -59,6 +59,7 @@ export interface ProductDto {
     images: ProductImageDto[];
     variants: ProductVariantDto[];
     inStock: boolean;
+    releasedAt: string;
     createdAt: string;
     updatedAt: string;
 }

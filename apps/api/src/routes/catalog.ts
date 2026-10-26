@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { Prisma } from '@prisma/client';
-import { catalogQuerySchema, compareSizes, type CatalogFacets } from '@volkoff/shared';
+import { catalogQuerySchema, compareSizes, hashString, type CatalogFacets } from '@volkoff/shared';
 import { prisma } from '../db';
 import { notFound } from '../lib/errors';
 import { productInclude, toCategoryDto, toProductDto } from '../lib/serializers';
@@ -53,12 +53,19 @@ export default async function catalogRoutes(app: FastifyInstance) {
                 : q.sort === 'price_desc'
                   ? [{ [priceField]: 'desc' }]
                   : q.sort === 'new'
-                    ? [{ createdAt: 'desc' }]
-                    : [{ isFeatured: 'desc' }, { sortOrder: 'asc' }, { createdAt: 'desc' }];
+                    ? [{ releasedAt: 'desc' }, { createdAt: 'desc' }]
+                    : [{ createdAt: 'desc' }];
 
         const products = await prisma.product.findMany({ where, orderBy, include: productInclude });
+        let dtos = products.map(toProductDto);
+        if (q.sort === 'manual') {
+            // «По вайбу» — случайный порядок, но стабильный для сида: назад из карточки не перемешивает.
+            // Закреплённые в админке всё равно сверху.
+            const seed = q.seed ?? Math.random().toString(36);
+            const rank = new Map(dtos.map((p) => [p.id, hashString(`${seed}:${p.id}`)]));
+            dtos = dtos.sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured) || rank.get(a.id)! - rank.get(b.id)!);
+        }
         // Распроданное — в конец, но не прячем: витрина «архива» тоже продаёт
-        const dtos = products.map(toProductDto);
         return [...dtos.filter((p) => p.inStock), ...dtos.filter((p) => !p.inStock)];
     });
 

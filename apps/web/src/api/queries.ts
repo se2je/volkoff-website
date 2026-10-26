@@ -10,6 +10,7 @@ export interface CatalogParams {
     max?: number;
     inStock?: boolean;
     sort?: string;
+    seed?: string;
     currency: string;
 }
 

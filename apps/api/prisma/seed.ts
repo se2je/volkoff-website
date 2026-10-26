@@ -136,6 +136,8 @@ async function main() {
             tags: item.tags,
             status: 'ACTIVE' as const,
             sortOrder: index,
+            // новинки на момент запуска — только последние две вещи
+            releasedAt: ['019', '020'].includes(item.id) ? new Date() : new Date(Date.now() - 60 * 86400_000),
         };
         const product = await prisma.product.upsert({ where: { code }, create: data, update: data });
         await prisma.productImage.deleteMany({ where: { productId: product.id } });

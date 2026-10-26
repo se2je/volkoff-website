@@ -71,6 +71,6 @@ uv run ansible-playbook playbooks/volkoff_website.yml -e hostsvar=test
 
 ## 6. Перед реальными продажами
 
-- реквизиты продавца — `apps/web/src/config/site.ts` → `LEGAL` (подставляются в оферту и политику);
+- реквизиты продавца — админка → «реквизиты» (подставляются в оферту и политику);
 - реальный платёжный шлюз вместо `PAYMENT_PROVIDER=mock` — см. [PAYMENTS.md](PAYMENTS.md);
 - юридические тексты показать юристу.

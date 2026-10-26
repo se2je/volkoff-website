@@ -67,6 +67,8 @@ export const catalogQuerySchema = z.object({
         .transform((v) => v === '1' || v === 'true')
         .optional(),
     sort: z.enum(SORTS).default('new'),
+    /** Сид для «по вайбу» — один и тот же сид даёт тот же случайный порядок (назад/вперёд не перемешивает) */
+    seed: z.string().trim().max(32).optional(),
 });
 export type CatalogQuery = z.infer<typeof catalogQuerySchema>;
 
@@ -107,6 +109,11 @@ export const productUpsertSchema = z.object({
     status: z.enum(PRODUCT_STATUSES).default('DRAFT'),
     isFeatured: z.boolean().default(false),
     sortOrder: z.number().int().default(0),
+    /** Дата выхода, YYYY-MM-DD */
+    releasedAt: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, 'дата выхода: ГГГГ-ММ-ДД')
+        .optional(),
     images: z.array(productImageInput).max(20).default([]),
     variants: z.array(productVariantInput).max(30).default([]),
 });

@@ -33,6 +33,8 @@ interface FormState {
     status: ProductStatus;
     isFeatured: boolean;
     sortOrder: number;
+    /** YYYY-MM-DD */
+    releasedAt: string;
     images: { id?: string; url: string; alt?: string | null }[];
     variants: { id?: string; size: string; stock: number }[];
 }
@@ -51,6 +53,7 @@ const EMPTY: FormState = {
     status: 'DRAFT',
     isFeatured: false,
     sortOrder: 0,
+    releasedAt: '',
     images: [],
     variants: [{ size: 'M', stock: 1 }],
 };
@@ -69,6 +72,7 @@ const fromProduct = (p: ProductDto): FormState => ({
     status: p.status,
     isFeatured: p.isFeatured,
     sortOrder: p.sortOrder,
+    releasedAt: p.releasedAt.slice(0, 10),
     images: p.images,
     variants: p.variants.map((v) => ({ id: v.id, size: v.size, stock: v.stock })),
 });
@@ -117,6 +121,7 @@ const ProductEditor: React.FC = () => {
         status: form.status,
         isFeatured: form.isFeatured,
         sortOrder: Number(form.sortOrder) || 0,
+        releasedAt: form.releasedAt || undefined,
         images: form.images.map((i) => ({ url: i.url, alt: i.alt ?? null })),
         variants: form.variants.filter((v) => v.size.trim()).map((v) => ({ size: v.size.trim(), stock: Number(v.stock) || 0 })),
     };
@@ -140,6 +145,7 @@ const ProductEditor: React.FC = () => {
             images: form.images.map((img, i) => ({ id: img.id ?? String(i), url: img.url, alt: img.alt ?? null })),
             variants: payload.variants.map((v, i) => ({ id: String(i), ...v })),
             inStock: payload.variants.some((v) => v.stock > 0),
+            releasedAt: form.releasedAt ? `${form.releasedAt}T12:00:00Z` : new Date().toISOString(),
             createdAt: '',
             updatedAt: '',
         };
@@ -422,16 +428,11 @@ const ProductEditor: React.FC = () => {
                             </label>
                             <label className="check">
                                 <input type="checkbox" checked={form.isFeatured} onChange={(e) => set('isFeatured', e.target.checked)} />
-                                закрепить наверху каталога
+                                закрепить наверху (в сортировке «по вайбу») + плашка «выбор волка»
                             </label>
                             <label className="field">
-                                <span className="field__label">порядок (меньше — выше)</span>
-                                <input
-                                    className="input"
-                                    type="number"
-                                    value={form.sortOrder}
-                                    onChange={(e) => set('sortOrder', Number(e.target.value))}
-                                />
+                                <span className="field__label">дата выхода — 14 дней после неё вещь «новинка» (пусто = сегодня)</span>
+                                <input className="input" type="date" value={form.releasedAt} onChange={(e) => set('releasedAt', e.target.value)} />
                             </label>
                             <details>
                                 <summary className="mono muted" style={{ fontSize: 12, cursor: 'pointer' }}>

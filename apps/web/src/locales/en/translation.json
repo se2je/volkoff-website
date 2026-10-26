@@ -31,6 +31,7 @@
       "price_asc": "cheaper",
       "price_desc": "pricier"
     },
+    "reroll": "shuffle again",
     "viewGrid": "grid",
     "viewBig": "big",
     "reset": "reset",
@@ -43,6 +44,8 @@
   },
   "product": {
     "soldOut": "sold out",
+    "isNew": "new drop",
+    "wolfPick": "wolf pick",
     "lastOne": "last one",
     "size": "size",
     "pickSize": "pick a size",

@@ -13,7 +13,7 @@
 - [ ] Прислать реквизиты: ФИО ИП, ИНН, ОГРНИП, адрес — **нужны до модерации сайта банком**
 
 **Мы:**
-- [ ] Вписать реквизиты в `apps/web/src/config/site.ts` → `LEGAL`, выпустить версию
+- [ ] Вписать реквизиты в админке → «реквизиты» (без релиза)
 - [ ] Настройки терминала в кабинете https://business.tbank.ru: одностадийная оплата, уведомления HTTP → `https://volkoffmvs.com/api/payments/webhook/tkassa`
 - [ ] Тестовые ключи → Vault `apps/volkoff_website`: `TKASSA_TERMINAL_KEY`, `TKASSA_PASSWORD` (+ `TKASSA_TAXATION`, если не УСН «доходы»)
 - [ ] Перезапустить деплой в Semaphore, оплатить тестовой картой, проверить статус и письмо
