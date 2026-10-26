@@ -81,7 +81,12 @@ export interface GameCallbacks {
     onScore: (meters: number) => void;
     onOver: (meters: number) => void;
     onQuip: (index: number) => void;
+    /** смена дня и ночи — чтобы рамка и подписи попапа перекрасились вместе с полем */
+    onNight: (night: boolean) => void;
 }
+
+/** Каждые столько метров день сменяется ночью и обратно */
+const NIGHT_EVERY = 1000;
 
 /** Реплики раз в столько метров */
 const QUIP_EVERY = 1000;
@@ -126,6 +131,7 @@ export const createGame = (
     let lastQuip = 0;
     let lastScore = -1;
     let night = 0;
+    let nightOn = false;
     let colors = palette(0);
 
     const reset = () => {
@@ -138,6 +144,10 @@ export const createGame = (
         obstacles = [];
         lastQuip = 0;
         lastScore = -1;
+        if (nightOn) {
+            nightOn = false;
+            cb.onNight(false);
+        }
     };
 
     const meters = () => Math.floor(distance / 12);
@@ -176,9 +186,9 @@ export const createGame = (
     };
 
     const update = (dt: number) => {
-        // в ночь уходим на старте забега и остаёмся до выхода в меню
-        const target = phase === 'intro' ? 0 : 1;
-        night = target > night ? Math.min(target, night + dt * 2) : Math.max(target, night - dt * 2);
+        // день → ночь → день каждые NIGHT_EVERY метров, переход плавный, около секунды
+        const target = nightOn ? 1 : 0;
+        night = target > night ? Math.min(target, night + dt) : Math.max(target, night - dt);
         animT += dt * (phase === 'run' ? speed / SPEED0 : 0.4);
         if (phase !== 'run') return;
 
@@ -213,6 +223,11 @@ export const createGame = (
         }
 
         const m = meters();
+        const shouldNight = Math.floor(m / NIGHT_EVERY) % 2 === 1;
+        if (shouldNight !== nightOn) {
+            nightOn = shouldNight;
+            cb.onNight(nightOn);
+        }
         if (m !== lastScore) {
             lastScore = m;
             cb.onScore(m);

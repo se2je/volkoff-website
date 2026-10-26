@@ -46,6 +46,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [score, setScore] = useState(0);
     const [best, setBest] = useState(readBest);
     const [quip, setQuip] = useState<string | null>(null);
+    const [night, setNight] = useState(false);
     const [overLine, setOverLine] = useState('');
     const overAt = useRef(0);
     const [width] = useState(() => worldWidth(Math.min(window.innerWidth - 32, 760)));
@@ -53,6 +54,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     useEffect(() => {
         const g = createGame(canvasRef.current!, {
             onScore: setScore,
+            onNight: setNight,
             onQuip: (i) => {
                 setQuip(tx.quips[(i - 1) % tx.quips.length]);
                 window.setTimeout(() => setQuip(null), 2600);
@@ -143,7 +145,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     return (
         // закрывается только крестиком — клик мимо попапа не должен убивать забег
         <div className={styles.overlay}>
-            <div className={`${styles.panel} ${phase !== 'intro' ? styles.night : ''}`} role="dialog" aria-label="VOLKOFF_RUN">
+            <div className={`${styles.panel} ${night ? styles.night : ''}`} role="dialog" aria-label="VOLKOFF_RUN">
                 <header className={styles.head}>
                     <span>
                         VOLKOFF_RUN<span className={styles.cursor}>_</span>
