@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CONTACTS } from '@/config/site';
+import WolfMark from '../WolfMark';
 import styles from './Layout.module.scss';
 
 const Footer: React.FC = () => {
@@ -10,6 +11,7 @@ const Footer: React.FC = () => {
         <footer className={styles.footer}>
             <div className={`container ${styles.footerInner}`}>
                 <div className={styles.footerLogo}>
+                    <WolfMark size={64} className={styles.footerMark} />
                     VOLKOFF<span className={styles.cursor}>_</span>
                 </div>
                 <div className={styles.footerCols}>

@@ -75,18 +75,44 @@ export const DEFAULT_TAG_RAIL: TagRail = {
     durationSec: 70,
 };
 
+/** Большой баннер-обложка над каталогом */
+export const heroSchema = z.object({
+    enabled: z.boolean(),
+    imageUrl: z.string().trim().max(500).nullable(),
+    title: z.object({ ru: z.string().trim().max(120), en: z.string().trim().max(120) }),
+    subtitle: z.object({ ru: z.string().trim().max(300), en: z.string().trim().max(300) }),
+    link: safeLink.nullable().optional(),
+    linkLabel: z.object({ ru: z.string().trim().max(60), en: z.string().trim().max(60) }),
+    /** фото в ч/б под монохром сайта */
+    grayscale: z.boolean(),
+});
+export type Hero = z.infer<typeof heroSchema>;
+
+export const DEFAULT_HERO: Hero = {
+    enabled: false,
+    imageUrl: null,
+    title: { ru: '', en: '' },
+    subtitle: { ru: '', en: '' },
+    link: null,
+    linkLabel: { ru: '', en: '' },
+    grayscale: false,
+};
+
 export interface SiteSettingsDto {
     cartMoods: CartMoodLevel[];
     tagRail: TagRail;
+    hero: Hero;
 }
 
 export const SETTINGS_SCHEMAS = {
     cartMoods: cartMoodsSchema,
     tagRail: tagRailSchema,
+    hero: heroSchema,
 } as const;
 export type SettingKey = keyof typeof SETTINGS_SCHEMAS;
 
 export const DEFAULT_SETTINGS: SiteSettingsDto = {
     cartMoods: DEFAULT_CART_MOODS,
     tagRail: DEFAULT_TAG_RAIL,
+    hero: DEFAULT_HERO,
 };

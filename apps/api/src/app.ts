@@ -17,6 +17,7 @@ import { adminContentRoutes, contentRoutes } from './routes/content';
 import meRoutes from './routes/me';
 import orderRoutes from './routes/orders';
 import paymentRoutes from './routes/payments';
+import seoRoutes from './routes/seo';
 
 export const buildApp = async () => {
     const app = Fastify({
@@ -77,6 +78,7 @@ export const buildApp = async () => {
     await app.register(adminRoutes, { prefix: '/api/admin' });
     await app.register(contentRoutes, { prefix: '/api' });
     await app.register(adminContentRoutes, { prefix: '/api/admin' });
+    await app.register(seoRoutes, { prefix: '/api/seo' });
 
     return app;
 };

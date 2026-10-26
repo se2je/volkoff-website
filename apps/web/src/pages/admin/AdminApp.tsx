@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, NavLink, Route, Routes } from 'react-router-dom';
 import { useAuth } from '@/store/auth';
 import Avatar from '@/components/Avatar';
+import WolfMark from '@/components/WolfMark';
 import Toasts from '@/components/Layout/Toasts';
 import Dashboard from './Dashboard';
 import ProductsList from './ProductsList';
@@ -13,6 +14,7 @@ import Content from './Content';
 import News from './News';
 import CartSettings from './CartSettings';
 import RailSettings from './RailSettings';
+import HeroSettings from './HeroSettings';
 import styles from './Admin.module.scss';
 
 const NAV = [
@@ -21,6 +23,7 @@ const NAV = [
     { to: '/admin/orders', label: 'заказы' },
     { to: '/admin/categories', label: 'категории' },
     { to: '/admin/users', label: 'люди' },
+    { to: '/admin/hero', label: 'обложка' },
     { to: '/admin/news', label: 'новости' },
     { to: '/admin/content', label: 'тексты' },
     { to: '/admin/rail', label: 'лента' },
@@ -34,6 +37,7 @@ const AdminApp: React.FC = () => {
         <div className={styles.shell}>
             <aside className={styles.side}>
                 <Link to="/" className={styles.logo}>
+                    <WolfMark size={20} />
                     VOLKOFF
                     <span>admin</span>
                 </Link>
@@ -63,6 +67,7 @@ const AdminApp: React.FC = () => {
                     <Route path="orders" element={<Orders />} />
                     <Route path="categories" element={<Categories />} />
                     <Route path="users" element={<Users />} />
+                    <Route path="hero" element={<HeroSettings />} />
                     <Route path="news" element={<News />} />
                     <Route path="content" element={<Content />} />
                     <Route path="rail" element={<RailSettings />} />

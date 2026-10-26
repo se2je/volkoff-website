@@ -37,11 +37,17 @@
 
 .logo {
   grid-area: logo;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 8px;
+  align-items: center;
+  justify-content: start;
   font-family: $font-display;
   font-size: 1.6rem;
   line-height: 1;
 
   span {
+    grid-column: 2;
     display: block;
     font-family: $font-mono;
     font-size: 10px;

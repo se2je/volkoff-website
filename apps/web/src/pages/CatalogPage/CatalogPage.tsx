@@ -5,6 +5,7 @@ import { ChevronDown, LayoutGrid, Rows3, X } from 'lucide-react';
 import { useCategories, useFacets, useProducts } from '@/api/queries';
 import ProductCard from '@/components/ProductCard/ProductCard';
 import NewsSlider from '@/components/NewsSlider/NewsSlider';
+import Hero from '@/components/Hero/Hero';
 import { useFmt, useSiteText } from '@/lib/format';
 import { usePrefs } from '@/store/prefs';
 import styles from './CatalogPage.module.scss';
@@ -62,6 +63,7 @@ const CatalogPage: React.FC = () => {
 
     return (
         <div className={`container ${styles.page}`}>
+            <Hero />
             <NewsSlider />
             <header className={styles.hero}>
                 <h1 className={styles.bigWord}>

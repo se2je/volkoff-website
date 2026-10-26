@@ -42,6 +42,8 @@ model Session {
   ip         String?
   expiresAt  DateTime
   revokedAt  DateTime?
+  /// Когда токен заменили новым при обновлении (в отличие от выхода, где только revokedAt)
+  rotatedAt  DateTime?
   createdAt  DateTime  @default(now())
   lastUsedAt DateTime  @default(now())
 

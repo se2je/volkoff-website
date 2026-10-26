@@ -140,14 +140,35 @@
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: $font-display;
   font-size: 2rem;
   letter-spacing: 0.06em;
   line-height: 1;
-  transition: letter-spacing 0.3s;
 
-  &:hover {
+  span {
+    transition: letter-spacing 0.3s;
+  }
+
+  &:hover span {
     letter-spacing: 0.14em;
+  }
+
+  // на наведение волк «моргает»
+  &:hover .logoMark {
+    animation: wolfBlink 0.5s steps(2) 2;
+  }
+}
+
+.logoMark {
+  margin-top: -2px;
+}
+
+@keyframes wolfBlink {
+  50% {
+    transform: scaleY(0.85);
   }
 }
 
@@ -464,9 +485,19 @@
 }
 
 .footerLogo {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.2em;
   font-family: $font-display;
   font-size: $fs-huge;
   line-height: 0.9;
+}
+
+.footerMark {
+  width: 0.62em !important;
+  height: 0.62em !important;
+  flex-basis: 0.62em !important;
+  margin-bottom: 0.08em;
 }
 
 .cursor {

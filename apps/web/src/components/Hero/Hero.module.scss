@@ -1,0 +1,77 @@
+// Обложка: фото на всю ширину контейнера, подпись — чёрная плашка в левом нижнем углу
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: $sp-lg;
+  background: $bone;
+  aspect-ratio: 21 / 9;
+  max-height: 72vh;
+
+  @media (max-width: $bp-md) {
+    aspect-ratio: 4 / 5;
+    max-height: none;
+  }
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gray {
+  filter: grayscale(1) contrast(1.05);
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  max-width: min(560px, 100%);
+  background: $ink;
+  color: $paper;
+  padding: $sp-md $sp-lg;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  @media (max-width: $bp-sm) {
+    right: 0;
+    max-width: none;
+    padding: $sp-md;
+  }
+}
+
+.title {
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  line-height: 1.5;
+  color: rgba($paper, 0.75);
+  margin: 0;
+  white-space: pre-line;
+}
+
+.cta {
+  width: fit-content;
+  margin-top: 0.25rem;
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  padding: 0.5em 1em;
+  border: 1px solid $paper;
+
+  &:hover {
+    background: $paper;
+    color: $ink;
+  }
+}

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /checkout
+Disallow: /pay/
+Disallow: /api/
+Disallow: /verify-email
+Disallow: /reset-password
+
+Sitemap: https://volkoffmvs.com/sitemap.xml

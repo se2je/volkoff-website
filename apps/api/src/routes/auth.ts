@@ -27,6 +27,8 @@ import { resetPasswordTemplate, verifyEmailTemplate } from '../mail/templates';
 import { parse, requireAuth } from '../plugins/auth';
 
 const REFRESH_COOKIE = 'vk_rt';
+/** Сколько старый refresh-токен ещё принимается после замены — на случай одновременных запросов из нескольких вкладок */
+const REFRESH_REUSE_GRACE_MS = 30_000;
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000;
 const RESET_TTL_MS = 60 * 60 * 1000;
 
@@ -146,20 +148,30 @@ export default async function authRoutes(app: FastifyInstance) {
             reply.clearCookie(REFRESH_COOKIE, cookieOptions);
             throw unauthorized('NO_SESSION');
         }
-        if (session.revokedAt) {
-            // Повторное использование уже ротированного токена — вероятная кража. Гасим все сессии.
-            await prisma.session.updateMany({ where: { userId: session.userId, revokedAt: null }, data: { revokedAt: new Date() } });
-            reply.clearCookie(REFRESH_COOKIE, cookieOptions);
-            app.log.warn({ userId: session.userId }, 'refresh token reuse detected');
-            throw unauthorized('SESSION_REVOKED');
-        }
         if (session.expiresAt < new Date()) {
             reply.clearCookie(REFRESH_COOKIE, cookieOptions);
             throw unauthorized('SESSION_EXPIRED');
         }
 
-        // Ротация: старую сессию закрываем, выдаём новую
-        await prisma.session.update({ where: { id: session.id }, data: { revokedAt: new Date(), lastUsedAt: new Date() } });
+        // Токен только что заменили (две вкладки обновились одновременно) — это не кража, выдаём новую сессию
+        const inGrace = (s: { rotatedAt: Date | null }) =>
+            !!s.rotatedAt && Date.now() - s.rotatedAt.getTime() < REFRESH_REUSE_GRACE_MS;
+
+        if (session.revokedAt) {
+            if (inGrace(session)) return startSession(req, reply, session.user);
+            // Повторное использование давно заменённого или отозванного токена — вероятная кража. Гасим все сессии.
+            await prisma.session.updateMany({ where: { userId: session.userId, revokedAt: null }, data: { revokedAt: new Date() } });
+            reply.clearCookie(REFRESH_COOKIE, cookieOptions);
+            app.log.warn({ userId: session.userId }, 'refresh token reuse detected');
+            throw unauthorized('SESSION_REVOKED');
+        }
+
+        // Ротация: старую сессию закрываем (атомарно — параллельный запрос попадёт в «льготу» выше), выдаём новую
+        const now = new Date();
+        await prisma.session.updateMany({
+            where: { id: session.id, revokedAt: null },
+            data: { revokedAt: now, rotatedAt: now, lastUsedAt: now },
+        });
         return startSession(req, reply, session.user);
     });
 

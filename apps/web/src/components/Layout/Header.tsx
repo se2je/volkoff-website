@@ -8,6 +8,7 @@ import { usePrefs } from '@/store/prefs';
 import { useCartMood } from '@/lib/format';
 import Avatar from '../Avatar';
 import MoodFace from '../MoodFace';
+import WolfMark from '../WolfMark';
 import styles from './Layout.module.scss';
 
 /** Язык и валюта — одна компактная кнопка с выпадашкой, чтобы не мусорить в шапке */
@@ -116,7 +117,8 @@ const Header: React.FC = () => {
             <header className={styles.header}>
                 <div className={`container ${styles.headerInner}`}>
                     <Link to="/" className={styles.logo} aria-label="VOLKOFF">
-                        VOLKOFF
+                        <WolfMark size={26} className={styles.logoMark} />
+                        <span>VOLKOFF</span>
                     </Link>
 
                     <nav className={styles.nav}>{navLinks}</nav>

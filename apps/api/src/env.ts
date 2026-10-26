@@ -11,6 +11,8 @@ const schema = z.object({
     HOST: z.string().default('0.0.0.0'),
     DATABASE_URL: z.string().min(1),
     WEB_URL: z.string().url(),
+    /** Откуда API берёт index.html для SEO-страниц; пусто — WEB_URL */
+    WEB_INTERNAL_URL: z.string().default(''),
     API_URL: z.string().url(),
     JWT_SECRET: z.string().min(32, 'JWT_SECRET должен быть не короче 32 символов'),
     ADMIN_EMAILS: z
