@@ -4,9 +4,8 @@ import { installChaser, releaseChaser } from './chaser';
 
 // Пасхалки с пиксельным волком. Всё рисуется прямо в body и само за собой убирается — React не трогаем.
 
-/** Пиксельный волк 9×9 — тот же, что в brand/wolf и фавиконках */
-export const WOLF = ['#_______#', '##_____##', '#########', '##_###_##', '#########', '_#######_', '__#####__', '___###___', '____#____'];
-export const WOLF_PATH = WOLF.flatMap((row, y) => [...row].map((c, x) => (c === '#' ? `M${x} ${y}h1v1h-1z` : ''))).join('');
+export { WOLF, WOLF_PATH } from './wolfGrid';
+import { WOLF, WOLF_PATH } from './wolfGrid';
 
 const reducedMotion = () => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 

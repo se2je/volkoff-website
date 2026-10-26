@@ -16,6 +16,7 @@ import CartSettings from './CartSettings';
 import RailSettings from './RailSettings';
 import HeroSettings from './HeroSettings';
 import LegalSettings from './LegalSettings';
+import QrPage from './QrPage';
 import styles from './Admin.module.scss';
 
 const NAV = [
@@ -30,6 +31,7 @@ const NAV = [
     { to: '/admin/rail', label: 'лента' },
     { to: '/admin/cart', label: 'корзина' },
     { to: '/admin/legal', label: 'реквизиты' },
+    { to: '/admin/qr', label: 'qr-код' },
 ];
 
 /** Админка. Интерфейс на русском, контент товаров — на двух языках. */
@@ -75,6 +77,7 @@ const AdminApp: React.FC = () => {
                     <Route path="rail" element={<RailSettings />} />
                     <Route path="cart" element={<CartSettings />} />
                     <Route path="legal" element={<LegalSettings />} />
+                    <Route path="qr" element={<QrPage />} />
                 </Routes>
             </main>
             <Toasts />
