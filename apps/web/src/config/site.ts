@@ -2,6 +2,8 @@ export const CONTACTS = {
     email: 'marcvolkov@icloud.com',
     instagram: 'https://www.instagram.com/volkoff_mv',
     instagramHandle: '@volkoff_mv',
+    /** Кому пишут из карточки товара («написать барыге в тг») */
+    telegram: 'kisikovichXD_HD',
 };
 
 /**

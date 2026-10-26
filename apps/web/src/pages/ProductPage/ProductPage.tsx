@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X } from 'lucide-react';
+import { Send, X } from 'lucide-react';
+import { CONTACTS } from '@/config/site';
 import { useProduct } from '@/api/queries';
 import SizePicker from '@/components/ProductCard/SizePicker';
 import PriceTag from '@/components/ProductCard/PriceTag';
@@ -63,6 +64,14 @@ const ProductPage: React.FC = () => {
     const images = product.images;
     const variant = product.variants.find((v) => v.size === size);
     const soldOut = !product.inStock || product.status !== 'ACTIVE';
+
+    // Ссылка в Telegram с предзаполненным сообщением: название, артикул, размер (если выбран) и ссылка на вещь
+    const telegramText = [
+        t('product.telegramMessage', { name: l(product.name) }),
+        `${product.code}${size ? ` · ${t('product.size')} ${size}` : ''}`,
+        `${window.location.origin}/product/${product.slug}`,
+    ].join('\n');
+    const telegramLink = `https://t.me/${CONTACTS.telegram}?text=${encodeURIComponent(telegramText)}`;
 
     const addToCart = () => {
         if (!size) return;
@@ -145,6 +154,15 @@ const ProductPage: React.FC = () => {
                     <button className="btn btn--acid btn--block" disabled={soldOut || !size} onClick={addToCart}>
                         {soldOut ? t('product.soldOut') : size ? `${t('product.addToCart')} →` : t('product.pickSize')}
                     </button>
+
+                    <a
+                        className={`btn btn--ghost btn--block ${styles.tg}`}
+                        href={telegramLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Send size={15} strokeWidth={1.5} /> {t('product.telegram')}
+                    </a>
 
                     <p className={styles.handmade}>✶ {t('product.handmade')}</p>
 

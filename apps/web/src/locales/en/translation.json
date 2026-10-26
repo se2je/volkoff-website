@@ -58,7 +58,9 @@
     "back": "← back to catalog",
     "notFound": "no such piece. or not anymore.",
     "front": "front",
-    "reverse": "back"
+    "reverse": "back",
+    "telegram": "message the dealer on telegram",
+    "telegramMessage": "Bro, I wanna buy this shit from you: {{name}}"
   },
   "cart": {
     "title": "cart",
