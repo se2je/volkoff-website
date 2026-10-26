@@ -146,8 +146,9 @@
 // Реплика на бегу: координаты ставит движок каждый кадр, хвостик смотрит на морду
 .quip {
   top: auto;
-  white-space: nowrap;
-  max-width: none;
+  width: max-content;
+  // длинные цитаты переносятся, но не шире двух третей поля
+  max-width: 62%;
   font-size: 11px;
   padding: 5px 9px;
 
