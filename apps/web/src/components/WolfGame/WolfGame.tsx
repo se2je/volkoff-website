@@ -10,7 +10,7 @@ const TEXT = {
     ru: {
         intro: 'бля, они хотят поймать меня и заставить выступать в цирке. но волки в цирке не выступают.',
         start: 'пробел / тап — бежать',
-        hint: '↑ пробел тап — прыжок · ↓ свайп вниз — пригнуться · esc — выйти',
+        hint: '↑ пробел тап — прыжок · ↓ свайп вниз — пригнуться · × — выйти',
         best: 'рекорд',
         again: 'ещё раз — пробел / тап',
         quips: ['свобода пахнет болотом', 'клоуны, отстаньте', 'ни одного трюка, ребята', 'обруч себе засуньте', 'я в коже, а не в трико', 'дрессировщик, ты устал'],
@@ -19,7 +19,7 @@ const TEXT = {
     en: {
         intro: "damn, they want to catch me and make me perform in the circus. but wolves don't do circus.",
         start: 'space / tap — run',
-        hint: '↑ space tap — jump · ↓ swipe down — duck · esc — quit',
+        hint: '↑ space tap — jump · ↓ swipe down — duck · × — quit',
         best: 'best',
         again: 'again — space / tap',
         quips: ['freedom smells like swamp', 'clowns, back off', 'no tricks, guys', 'keep your hoop', "i wear leather, not tights", 'tired, trainer?'],
@@ -40,6 +40,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const { i18n } = useTranslation();
     const tx = TEXT[i18n.language.startsWith('en') ? 'en' : 'ru'];
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const quipRef = useRef<HTMLDivElement>(null);
     const game = useRef<Game | null>(null);
     const [phase, setPhase] = useState<'intro' | 'run' | 'over'>('intro');
     const [score, setScore] = useState(0);
@@ -54,7 +55,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onScore: setScore,
             onQuip: (i) => {
                 setQuip(tx.quips[(i - 1) % tx.quips.length]);
-                window.setTimeout(() => setQuip(null), 2200);
+                window.setTimeout(() => setQuip(null), 2600);
             },
             onOver: (m) => {
                 overAt.current = performance.now();
@@ -71,7 +72,7 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     return nb;
                 });
             },
-        }, width);
+        }, width, () => quipRef.current);
         game.current = g;
         const onVis = () => !document.hidden && g.resync();
         document.addEventListener('visibilitychange', onVis);
@@ -96,7 +97,6 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         const prevOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         const down = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') return onClose();
             if ([' ', 'ArrowUp', 'w', 'W'].includes(e.key)) {
                 e.preventDefault();
                 if (!e.repeat) action();
@@ -141,8 +141,9 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const pad = (n: number) => String(n).padStart(5, '0');
 
     return (
-        <div className={styles.overlay} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-            <div className={styles.panel} role="dialog" aria-label="VOLKOFF_RUN">
+        // закрывается только крестиком — клик мимо попапа не должен убивать забег
+        <div className={styles.overlay}>
+            <div className={`${styles.panel} ${phase !== 'intro' ? styles.night : ''}`} role="dialog" aria-label="VOLKOFF_RUN">
                 <header className={styles.head}>
                     <span>
                         VOLKOFF_RUN<span className={styles.cursor}>_</span>
@@ -174,12 +175,16 @@ const WolfGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 >
                     <canvas ref={canvasRef} className={styles.canvas} style={{ aspectRatio: `${width} / ${H}` }} />
                     {phase === 'intro' && (
-                        <div className={styles.bubble}>
+                        <div className={`${styles.bubble} ${styles.intro}`}>
                             <p>{tx.intro}</p>
                             <span className={styles.blink}>{tx.start}</span>
                         </div>
                     )}
-                    {phase === 'run' && quip && <div className={`${styles.bubble} ${styles.quip}`}>{quip}</div>}
+                    {phase === 'run' && quip && (
+                        <div ref={quipRef} className={`${styles.bubble} ${styles.quip}`}>
+                            {quip}
+                        </div>
+                    )}
                     {phase === 'over' && (
                         <div className={styles.over}>
                             <strong>GAME OVER</strong>

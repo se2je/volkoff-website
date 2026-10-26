@@ -16,6 +16,33 @@
   font-family: $font-mono;
   color: $ink;
   user-select: none;
+  transition: background 0.5s, color 0.5s, border-color 0.5s;
+}
+
+// Ночь во время забега: всё инвертируется вслед за полем на canvas
+.night {
+  background: $ink;
+  color: $paper;
+  border-color: $paper;
+
+  .bubble {
+    background: $ink;
+    border-color: $paper;
+
+    &::after {
+      background: $paper;
+      box-shadow: -6px 6px 0 -1px $paper;
+    }
+  }
+
+  .blink,
+  .hint {
+    color: rgba($paper, 0.55);
+  }
+
+  .hint {
+    border-top-color: rgba($paper, 0.15);
+  }
 }
 
 .head {
@@ -105,7 +132,7 @@
     flex-direction: column-reverse;
   }
 
-  .bubble {
+  .intro {
     position: static;
     max-width: none;
     margin: 8px 8px 0;
@@ -116,10 +143,17 @@
   }
 }
 
+// Реплика на бегу: координаты ставит движок каждый кадр, хвостик смотрит на морду
 .quip {
-  top: 22%;
+  top: auto;
+  white-space: nowrap;
+  max-width: none;
   font-size: 11px;
-  padding: 6px 10px;
+  padding: 5px 9px;
+
+  &::after {
+    left: 2px;
+  }
 }
 
 .over {

@@ -7,8 +7,17 @@ export const H = 240;
 const GROUND = 204;
 const S = 3;
 
-const INK = '#0b0b0b';
-const GHOST = 'rgba(11, 11, 11, 0.07)';
+// День: чёрное на белом. Во время забега — плавно в ночь: белое на чёрном.
+const mix = (a: number, b: number, t: number) => Math.round(a + (b - a) * t);
+const palette = (night: number) => {
+    const bg = mix(255, 11, night);
+    const ink = mix(11, 255, night);
+    return {
+        bg: `rgb(${bg},${bg},${bg})`,
+        ink: `rgb(${ink},${ink},${ink})`,
+        ghost: `rgba(${ink},${ink},${ink},${0.07 + night * 0.05})`,
+    };
+};
 
 type Grid = readonly string[];
 
@@ -45,7 +54,7 @@ const BALL: Grid = ['..####..', '.######.', '##.#####', '#.######', '########', 
 const gridW = (g: Grid) => g[0].length * S;
 const gridH = (g: Grid) => g.length * S;
 
-const drawGrid = (ctx: CanvasRenderingContext2D, g: Grid, x: number, y: number, color = INK) => {
+const drawGrid = (ctx: CanvasRenderingContext2D, g: Grid, x: number, y: number, color: string) => {
     ctx.fillStyle = color;
     const ox = Math.round(x);
     const oy = Math.round(y);
@@ -74,7 +83,16 @@ export interface GameCallbacks {
     onQuip: (index: number) => void;
 }
 
-export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720) => {
+/** Реплики раз в столько метров */
+const QUIP_EVERY = 1000;
+
+export const createGame = (
+    canvas: HTMLCanvasElement,
+    cb: GameCallbacks,
+    W = 720,
+    /** пузырь с репликой — двигаем вслед за волком */
+    follow: () => HTMLElement | null = () => null,
+) => {
     const ctx = canvas.getContext('2d')!;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = W * dpr;
@@ -107,6 +125,8 @@ export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720
     let dashes = Array.from({ length: Math.ceil(W / 30) }, (_, i) => ({ x: i * 34 + ((i * 13) % 20), y: GROUND + 6 + ((i * 7) % 18) }));
     let lastQuip = 0;
     let lastScore = -1;
+    let night = 0;
+    let colors = palette(0);
 
     const reset = () => {
         wolfY = 0;
@@ -156,6 +176,9 @@ export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720
     };
 
     const update = (dt: number) => {
+        // в ночь уходим на старте забега и остаёмся до выхода в меню
+        const target = phase === 'intro' ? 0 : 1;
+        night = target > night ? Math.min(target, night + dt * 2) : Math.max(target, night - dt * 2);
         animT += dt * (phase === 'run' ? speed / SPEED0 : 0.4);
         if (phase !== 'run') return;
 
@@ -194,9 +217,9 @@ export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720
             lastScore = m;
             cb.onScore(m);
         }
-        if (m >= lastQuip + 400) {
+        if (m >= lastQuip + QUIP_EVERY) {
             lastQuip = m;
-            cb.onQuip(m / 400);
+            cb.onQuip(m / QUIP_EVERY);
         }
 
         if (obstacles.some(hit)) {
@@ -207,7 +230,7 @@ export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720
 
     const drawTent = (x: number, h: number) => {
         const base = GROUND;
-        ctx.fillStyle = GHOST;
+        ctx.fillStyle = colors.ghost;
         ctx.beginPath();
         ctx.moveTo(x, base);
         ctx.lineTo(x + 50, base - h);
@@ -220,7 +243,7 @@ export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720
     };
 
     const drawPedestal = (o: Obstacle) => {
-        ctx.fillStyle = INK;
+        ctx.fillStyle = colors.ink;
         const x = Math.round(o.x);
         // крышка шире тумбы, бока — полосатые, как в цирке
         ctx.fillRect(x - S, o.y, o.w + 2 * S, 2 * S);
@@ -233,24 +256,33 @@ export const createGame = (canvas: HTMLCanvasElement, cb: GameCallbacks, W = 720
     };
 
     const draw = () => {
-        ctx.fillStyle = '#ffffff';
+        colors = palette(night);
+        ctx.fillStyle = colors.bg;
         ctx.fillRect(0, 0, W, H);
 
         for (const t of tents) drawTent(t.x, t.h);
 
         // земля
-        ctx.fillStyle = INK;
+        ctx.fillStyle = colors.ink;
         ctx.fillRect(0, GROUND, W, 2);
         for (const d of dashes) ctx.fillRect(Math.round(d.x), d.y, d.y % 3 === 0 ? 6 : 3, 2);
 
         for (const o of obstacles) {
             if (o.kind === 'pedestal') drawPedestal(o);
-            else if (o.kind === 'ball') drawGrid(ctx, BALL, o.x, o.y);
-            else for (let i = 0; i < o.n; i++) drawGrid(ctx, PIN, o.x + i * (gridW(PIN) + 2 * S), o.y);
+            else if (o.kind === 'ball') drawGrid(ctx, BALL, o.x, o.y, colors.ink);
+            else for (let i = 0; i < o.n; i++) drawGrid(ctx, PIN, o.x + i * (gridW(PIN) + 2 * S), o.y, colors.ink);
         }
 
         const g = ducking && wolfY === 0 ? DUCK : wolfY > 0 ? RUN_B : Math.floor(animT * 10) % 2 ? RUN_B : RUN_A;
-        drawGrid(ctx, g, wolfX, GROUND - wolfY - gridH(g));
+        drawGrid(ctx, g, wolfX, GROUND - wolfY - gridH(g), colors.ink);
+
+        // пузырь реплики висит над мордой и прыгает вместе с волком
+        const el = follow();
+        if (el) {
+            el.style.left = `${((wolfX + gridW(g) - 12) / W) * 100}%`;
+            // на пике прыжка не даём пузырю вылезти за поле
+            el.style.bottom = `${Math.min(78, ((H - (GROUND - wolfY - gridH(g)) + 10) / H) * 100)}%`;
+        }
     };
 
     const frame = (now: number) => {
