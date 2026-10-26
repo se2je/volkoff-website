@@ -2,10 +2,6 @@
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
 node_modules
 dist
@@ -18,8 +14,15 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
 *.sw?
+
+# Env
 .env
+.env.*
+!.env.example
+
+# Runtime data
+apps/api/uploads/*
+!apps/api/uploads/.gitkeep
+apps/api/secrets
+.vite

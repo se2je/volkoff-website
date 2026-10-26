@@ -1,0 +1,25 @@
+# Локальная инфраструктура для разработки: БД + ловушка для писем.
+# Запуск: npm run db:up
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: volkoff
+      POSTGRES_PASSWORD: volkoff
+      POSTGRES_DB: volkoff
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Mailpit принимает всю почту по SMTP (1025) и показывает её в веб-интерфейсе: http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.21
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  pgdata:

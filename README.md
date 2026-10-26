@@ -1,57 +1,43 @@
-# React + TypeScript + Vite
+# VOLKOFF
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Интернет-магазин VOLKOFF: витрина, корзина, аккаунты, админка, заказы. Монорепо на npm workspaces.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+apps/
+  api/        Fastify + Prisma + PostgreSQL — auth (JWT + refresh-cookie), каталог, заказы, почта, админ-API
+  web/        React + Vite — магазин и админка (/admin), RU / EN, ₽ / $
+packages/
+  shared/     общие типы, zod-схемы, генератор аватарок и никнеймов, «настроение» корзины
+docs/         деплой, почта, платёжные шлюзы
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Локальный запуск
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Нужны Node 22 и Docker.
 
-export default tseslint.config({
-  extends: [
-    // other configs...
-    // Enable lint rules for React
-    reactX.configs['recommended-typescript'],
-    // Enable lint rules for React DOM
-    reactDom.configs.recommended,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install
+npm run db:up                 # postgres (порт 5433) + mailpit (http://localhost:8025)
+cp apps/api/.env.example apps/api/.env
+npm run db:migrate            # миграции
+npm run db:seed               # 20 вещей из старого сайта + админ из ADMIN_EMAILS / SEED_ADMIN_PASSWORD
+npm run dev:api               # http://localhost:4000
+npm run dev:web               # http://localhost:5173 (проксирует /api и /uploads на API)
 ```
+
+Все письма в dev ловит Mailpit — ссылки подтверждения почты смотреть там.
+
+## Что внутри
+
+- **Аккаунты.** Регистрация с подтверждением почты, вход, сброс пароля, смена пароля, «выйти везде». Пароли — argon2id. Access-JWT (15 мин) живёт в памяти, refresh-токен — в httpOnly cookie, с ротацией и детектом повторного использования. Rate limit на всё, что связано с паролями.
+- **Позывной и аватарка.** После регистрации генерируется ник из пулов слов («ДикийСтайл515», «GigaBro77») и пиксельная аватарка по seed — можно перекрутить в кабинете.
+- **Каталог.** Категории, размеры, цена от/до, «в наличии», поиск по названию/тегу, сортировки, сетка / крупный вид. Фильтры синхронизированы с URL.
+- **Корзина.** Эмодзи у корзины меняется от суммы: 😡 → 🤨 → 🙂 → 😏 → 🤑 → 🔥 → 👑 → 💀.
+- **Заказы.** Резерв товара на 30 минут на время оплаты, автоотмена с возвратом на склад, письма об оплате и отправке.
+- **Оплата.** Интерфейс провайдера + тестовый `mock`-шлюз. Сравнение реальных шлюзов (₽ / $ / крипта) — [docs/PAYMENTS.md](docs/PAYMENTS.md).
+- **Админка** `/admin`. Товары (RU/EN, цены ₽ и $, размеры и остатки, загрузка и порядок фото, живое превью), категории, заказы (статусы, трек-номер), люди (роли), дашборд.
+- **Документы.** Оферта, политика ПДн, согласие на обработку ПДн, cookies — `apps/web/src/content/legal`. Реквизиты продавца подставляются из `apps/web/src/config/site.ts`.
+
+## Деплой
+
+[docs/DEPLOY.md](docs/DEPLOY.md) · [docs/MAIL.md](docs/MAIL.md)

@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+!**/.env.example
+.git
+.github
+.idea
+.claude
+.vite
+docs
+apps/api/uploads
+apps/api/secrets
+volkoff-website.zip

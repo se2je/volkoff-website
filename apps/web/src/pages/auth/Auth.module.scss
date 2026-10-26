@@ -1,0 +1,56 @@
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $sp-xl;
+  padding-top: $sp-xl;
+  padding-bottom: $sp-xl;
+  flex-wrap: wrap;
+}
+
+.box {
+  width: min(420px, 100%);
+  border: 1px solid $ink;
+  padding: $sp-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-lg;
+  align-items: flex-start;
+  background: $paper;
+
+  @media (max-width: $bp-sm) {
+    padding: $sp-md;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-md;
+  width: 100%;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  color: $muted;
+
+  a {
+    color: $ink;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $sp-md;
+  max-width: 220px;
+  text-align: center;
+  font-size: $fs-xs;
+}

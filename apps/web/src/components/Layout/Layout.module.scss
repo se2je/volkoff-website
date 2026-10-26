@@ -1,0 +1,405 @@
+// ---------------- Rail: вертикальная лента тегов справа ----------------
+.rail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  z-index: $z-header + 1;
+  background: $ink;
+  color: $paper;
+  overflow: hidden;
+  display: none;
+
+  @media (min-width: $bp-lg) {
+    display: block;
+  }
+}
+
+.railTrack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: railDown 70s linear infinite;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.railRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.railItem {
+  writing-mode: vertical-rl;
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding: 0.9rem 0;
+  color: rgba($paper, 0.75);
+
+  &:is(a):hover {
+    color: $paper;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.railDot {
+  width: 3px;
+  height: 3px;
+  background: rgba($paper, 0.5);
+}
+
+// бежит сверху вниз
+@keyframes railDown {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+// ---------------- Header ----------------
+.header {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  background: rgba($paper, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid $faint;
+}
+
+.headerInner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: $sp-lg;
+  height: 64px;
+}
+
+.logo {
+  font-family: $font-display;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  transition: letter-spacing 0.3s;
+
+  &:hover {
+    letter-spacing: 0.14em;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 4vw, 4rem);
+  font-size: $fs-md;
+
+  a {
+    color: $muted;
+    transition: color 0.15s;
+
+    &:hover {
+      color: $ink;
+    }
+  }
+
+  .navActive {
+    color: $ink;
+  }
+
+  .navAdmin {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: $ink;
+    border: 1px solid $ink;
+    padding: 2px 6px;
+  }
+
+  @media (max-width: $bp-lg) {
+    position: fixed;
+    inset: 64px 0 0 0;
+    background: $paper;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: $sp-lg $gutter;
+    gap: $sp-lg;
+    font-size: $fs-xxl;
+    font-family: $font-display;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+
+    a {
+      color: $ink;
+    }
+  }
+}
+
+.navOpen {
+  transform: none;
+}
+
+.switchers {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  color: $muted;
+
+  button {
+    color: $muted;
+    padding: 2px 4px;
+
+    &:hover {
+      color: $ink;
+    }
+  }
+
+  .on {
+    color: $paper;
+    background: $ink;
+  }
+
+  .sep {
+    width: 1px;
+    height: 14px;
+    background: $faint;
+    margin: 0 0.4rem;
+  }
+
+  @media (max-width: $bp-lg) {
+    font-size: $fs-md;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $sp-md;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: $fs-sm;
+
+  &:hover .nick {
+    text-decoration: underline;
+  }
+}
+
+.nick {
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: $bp-md) {
+    display: none;
+  }
+}
+
+.cartBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: $fs-md;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+.cartCount {
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  color: $muted;
+}
+
+.cartCountOn {
+  color: $ink;
+}
+
+.cartEmoji {
+  display: inline-block;
+  font-size: 1.15em;
+  animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.2) rotate(-30deg);
+  }
+}
+
+@keyframes shake {
+  20% { transform: translateX(-4px) rotate(-3deg); }
+  40% { transform: translateX(4px) rotate(3deg); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+.burger {
+  display: none;
+
+  @media (max-width: $bp-lg) {
+    display: block;
+  }
+}
+
+.verifyBanner {
+  background: $ink;
+  color: $paper;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  padding: 0.5rem $gutter;
+  display: flex;
+  justify-content: center;
+  gap: $sp-md;
+  flex-wrap: wrap;
+  border-bottom: 1px solid $ink;
+}
+
+.verifyBtn {
+  text-decoration: underline;
+}
+
+// ---------------- Footer ----------------
+.footer {
+  margin-top: $sp-xl;
+  background: $ink;
+  color: $paper;
+  padding: $sp-xl 0 $sp-md;
+}
+
+.footerInner {
+  display: flex;
+  justify-content: space-between;
+  gap: $sp-lg;
+  flex-wrap: wrap;
+}
+
+.footerLogo {
+  font-family: $font-display;
+  font-size: $fs-huge;
+  line-height: 0.9;
+}
+
+.cursor {
+  color: $paper;
+  animation: blink 1s steps(2) infinite;
+}
+
+.footerCols {
+  display: flex;
+  gap: clamp(2rem, 6vw, 6rem);
+  flex-wrap: wrap;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  h4 {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    font-weight: 400;
+    color: rgba($paper, 0.5);
+    margin-bottom: 0.4rem;
+  }
+
+  a {
+    font-size: $fs-sm;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.footerBottom {
+  margin-top: $sp-xl;
+  padding-top: $sp-md;
+  border-top: 1px solid rgba($paper, 0.15);
+  display: flex;
+  justify-content: space-between;
+  gap: $sp-md;
+  flex-wrap: wrap;
+  font-family: $font-mono;
+  font-size: 10px;
+  color: rgba($paper, 0.5);
+}
+
+// ---------------- Toasts & cookie ----------------
+.toasts {
+  position: fixed;
+  bottom: $sp-md;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: $z-toast;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  @include chip;
+  padding: 0.8em 1.2em;
+}
+
+.toast_error {
+  background: $alarm;
+}
+
+.cookie {
+  position: fixed;
+  left: $sp-md;
+  bottom: $sp-md;
+  z-index: $z-toast - 1;
+  max-width: 420px;
+  background: $paper;
+  border: 1px solid $ink;
+  padding: $sp-md;
+  display: flex;
+  gap: $sp-md;
+  align-items: flex-end;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+
+  a {
+    text-decoration: underline;
+  }
+
+  @media (max-width: $bp-sm) {
+    right: $sp-md;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

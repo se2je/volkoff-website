@@ -1,0 +1,170 @@
+.page {
+  padding-bottom: $sp-xl;
+}
+
+.gate {
+  background: $bone;
+  border: 1px solid $ink;
+  padding: $sp-md;
+  margin-bottom: $sp-lg;
+  font-family: $font-mono;
+  font-size: $fs-sm;
+
+  p {
+    margin: 0 0 $sp-sm;
+  }
+}
+
+.gateBtns {
+  display: flex;
+  gap: $sp-sm;
+  flex-wrap: wrap;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: $sp-lg;
+  align-items: start;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.col {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-lg;
+
+  &:disabled {
+    opacity: 0.45;
+  }
+}
+
+.h {
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  font-weight: 400;
+  text-transform: lowercase;
+  margin: 0 0 $sp-md;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $sp-md;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.methods {
+  display: grid;
+  gap: $sp-sm;
+}
+
+.method {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem $sp-sm;
+  border: 1px solid $ink;
+  padding: $sp-md;
+  cursor: pointer;
+  transition: background 0.12s;
+
+  input {
+    grid-row: span 2;
+    accent-color: $ink;
+  }
+
+  &:hover {
+    background: $bone;
+  }
+}
+
+.methodOn {
+  background: $ink;
+  color: $paper;
+
+  &:hover {
+    background: $ink;
+  }
+
+  .methodHint {
+    color: rgba($paper, 0.6);
+  }
+
+  b {
+    color: $hi;
+  }
+}
+
+.methodName {
+  font-family: $font-mono;
+  font-size: $fs-sm;
+}
+
+.methodHint {
+  font-size: $fs-xs;
+  color: $muted;
+}
+
+.summary {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-md;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-sm;
+  padding-bottom: $sp-md;
+  border-bottom: 1px solid $faint;
+
+  li {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: $sp-sm;
+    align-items: center;
+    font-size: $fs-sm;
+  }
+
+  img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border: 1px solid $faint;
+  }
+}
+
+.itemName {
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  text-transform: uppercase;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-family: $font-mono;
+  font-size: $fs-sm;
+}
+
+.total {
+  font-size: $fs-lg;
+  padding-top: $sp-sm;
+  border-top: 1px solid $ink;
+}

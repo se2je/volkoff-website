@@ -1,0 +1,253 @@
+.page {
+  padding-top: $sp-lg;
+  padding-bottom: $sp-xl;
+}
+
+.hero {
+  display: flex;
+  gap: $sp-lg;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nick {
+  font-family: $font-mono;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  line-height: 1;
+  margin: 0;
+  word-break: break-all;
+}
+
+.ok {
+  font-size: $fs-sm;
+}
+
+.warn {
+  font-size: $fs-sm;
+  color: $alarm;
+}
+
+.rerolls {
+  display: flex;
+  gap: $sp-sm;
+  margin-top: $sp-sm;
+  flex-wrap: wrap;
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+}
+
+.order {
+  display: grid;
+  grid-template-columns: auto 140px 1fr auto auto;
+  gap: $sp-md;
+  align-items: center;
+  padding: $sp-sm 0;
+  border-bottom: 1px solid $faint;
+  font-size: $fs-sm;
+
+  &:hover {
+    background: $bone;
+  }
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: auto 1fr auto;
+
+    .thumbs,
+    > :nth-child(4) {
+      display: none;
+    }
+  }
+}
+
+.status {
+  font-family: $font-mono;
+  font-size: $fs-xs;
+}
+
+.st_PENDING_PAYMENT {
+  color: $alarm;
+}
+
+.st_PAID,
+.st_PROCESSING,
+.st_SHIPPED {
+  background: $bone;
+  padding: 2px 6px;
+  width: fit-content;
+}
+
+.st_CANCELLED,
+.st_REFUNDED {
+  color: $muted;
+  text-decoration: line-through;
+}
+
+.thumbs {
+  display: flex;
+  gap: 4px;
+
+  img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border: 1px solid $faint;
+  }
+}
+
+.forms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $sp-lg;
+  margin-top: $sp-xl;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-md;
+    align-items: flex-start;
+  }
+
+  label {
+    width: 100%;
+  }
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.h {
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  font-weight: 400;
+  margin: 0;
+}
+
+.logout {
+  display: flex;
+  gap: $sp-sm;
+  flex-wrap: wrap;
+  margin-top: $sp-md;
+  padding-top: $sp-md;
+  border-top: 1px solid $faint;
+  width: 100%;
+}
+
+// ---------- Order page ----------
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border: 1px solid $ink;
+  margin-bottom: $sp-lg;
+
+  li {
+    padding: $sp-sm $sp-md;
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    color: $muted;
+    border-right: 1px solid $ink;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    &:last-child {
+      border-right: 0;
+    }
+
+    span {
+      font-size: 10px;
+    }
+  }
+
+  .done {
+    background: $ink;
+    color: $hi;
+  }
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+
+    li {
+      border-right: 0;
+      border-bottom: 1px solid $ink;
+    }
+  }
+}
+
+.cancelledChip {
+  margin-bottom: $sp-lg;
+  background: $alarm;
+}
+
+.payBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $sp-md;
+  flex-wrap: wrap;
+  border: 1px dashed $ink;
+  padding: $sp-md;
+  margin-bottom: $sp-lg;
+  font-size: $fs-sm;
+}
+
+.orderGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: $sp-lg;
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.orderItems {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-sm;
+  margin: $sp-md 0;
+
+  li {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: $sp-md;
+    align-items: center;
+    font-size: $fs-sm;
+  }
+
+  img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border: 1px solid $faint;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.sumRow {
+  display: flex;
+  justify-content: space-between;
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  padding: 4px 0;
+}
+
+.sumTotal {
+  font-size: $fs-lg;
+  border-top: 1px solid $ink;
+  padding-top: $sp-sm;
+  margin-top: $sp-sm;
+}

@@ -1,0 +1,61 @@
+.page {
+  padding-top: $sp-lg;
+}
+
+.huge {
+  font-family: $font-display;
+  font-weight: 400;
+  font-size: clamp(4rem, 18vw, 16rem);
+  line-height: 0.85;
+  margin: 0 0 $sp-lg;
+  letter-spacing: 0.02em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $sp-xl;
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+    gap: $sp-lg;
+  }
+}
+
+.lead {
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.text {
+  font-size: $fs-md;
+  line-height: 1.7;
+
+  p {
+    margin: 0 0 $sp-md;
+  }
+}
+
+.mission {
+  border-left: 1px solid $ink;
+  padding-left: $sp-md;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-md;
+  font-family: $font-mono;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: $sp-md;
+    width: fit-content;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

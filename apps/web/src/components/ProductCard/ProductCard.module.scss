@@ -1,0 +1,236 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+// ---------- фото ----------
+.mediaWrap {
+  position: relative;
+}
+
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  background: $paper;
+  overflow: hidden;
+}
+
+.img {
+  position: absolute;
+  inset: 6%;
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  transition: opacity 0.35s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.35s;
+}
+
+.imgBack {
+  opacity: 0;
+}
+
+.grid .media:hover {
+  .imgBack {
+    opacity: 1;
+  }
+
+  .img:not(.imgBack):has(+ .imgBack) {
+    opacity: 0;
+  }
+}
+
+.noImg {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  color: $muted;
+  background: repeating-linear-gradient(45deg, $paper 0 10px, $bone 10px 20px);
+}
+
+// Артикул — тихо, в углу
+.label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: $muted;
+}
+
+.stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-14deg);
+  border: 1px solid $ink;
+  color: $ink;
+  font-family: $font-mono;
+  font-size: $fs-xs;
+  padding: 0.3em 0.7em;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background: $paper;
+}
+
+.last {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: $font-mono;
+  font-size: 10px;
+  color: $ink;
+}
+
+.isSoldOut .img {
+  filter: grayscale(1) contrast(0.9);
+  opacity: 0.5;
+}
+
+// Переключатель «лицо / изнанка»
+.flip {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  border: 1px solid $ink;
+  background: $paper;
+  font-family: $font-mono;
+  font-size: 11px;
+
+  button {
+    padding: 4px 9px;
+    color: $muted;
+
+    &:hover {
+      color: $ink;
+    }
+  }
+
+  .flipOn {
+    background: $ink;
+    color: $paper;
+
+    &:hover {
+      color: $paper;
+    }
+  }
+}
+
+// ---------- подпись ----------
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $sp-md;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: $fs-sm;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.category {
+  font-size: $fs-xs;
+  color: $muted;
+}
+
+.priceTag {
+  flex: 0 0 auto;
+  font-family: $font-mono;
+  font-size: $fs-sm;
+  white-space: nowrap;
+}
+
+.priceTagLg {
+  font-size: $fs-xl;
+}
+
+.desc {
+  font-size: $fs-sm;
+  line-height: 1.6;
+  white-space: pre-line;
+  color: rgba($ink, 0.85);
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  a,
+  span {
+    font-family: $font-mono;
+    font-size: 11px;
+    color: $muted;
+
+    &::before {
+      content: '/';
+      margin-right: 2px;
+    }
+  }
+
+  a:hover {
+    color: $ink;
+  }
+}
+
+.sizes {
+  min-height: 2rem;
+}
+
+// ---- grid: размеры появляются при наведении ----
+.grid {
+  @media (hover: hover) {
+    .sizes {
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    &:hover .sizes,
+    &:focus-within .sizes {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+// ---- big: крупно, с описанием ----
+.big {
+  gap: 1rem;
+
+  .media {
+    aspect-ratio: 1 / 1;
+  }
+
+  .name {
+    font-size: $fs-md;
+  }
+
+  .priceTag {
+    font-size: $fs-md;
+  }
+}

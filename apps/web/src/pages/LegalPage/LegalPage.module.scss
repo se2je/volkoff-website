@@ -1,0 +1,99 @@
+.page {
+  padding-top: $sp-lg;
+  padding-bottom: $sp-xl;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  margin-bottom: $sp-lg;
+}
+
+.doc {
+  max-width: 780px;
+  font-size: 15px;
+  line-height: 1.7;
+
+  h1 {
+    font-family: $font-mono;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    line-height: 1.15;
+    margin: 0 0 $sp-sm;
+  }
+
+  h2 {
+    font-family: $font-mono;
+    font-weight: 500;
+    font-size: $fs-lg;
+    margin: $sp-lg 0 $sp-sm;
+    padding-top: $sp-md;
+    border-top: 1px solid $ink;
+  }
+
+  h3 {
+    font-size: $fs-md;
+    margin: $sp-md 0 $sp-sm;
+  }
+
+  p,
+  ul,
+  ol {
+    margin: 0 0 $sp-md;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.4em;
+  }
+
+  ul {
+    list-style: '— ';
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li {
+    margin-bottom: 0.3em;
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  em {
+    color: $muted;
+  }
+
+  blockquote {
+    margin: $sp-lg 0 0;
+    padding: $sp-md;
+    background: $bone;
+    border: 1px solid $ink;
+    font-family: $font-mono;
+    font-size: $fs-sm;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: $sp-md;
+    font-size: $fs-sm;
+  }
+
+  th,
+  td {
+    border: 1px solid $ink;
+    padding: 0.4em 0.6em;
+    text-align: left;
+    vertical-align: top;
+  }
+}
